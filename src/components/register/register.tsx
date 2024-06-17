@@ -1,7 +1,7 @@
 import { Button, Grid, TextField } from "@material-ui/core"
 import { FC, FormEvent, useState } from "react"
 
-export const Register: FC () => {
+export const Register: FC = () => {
 
     const [name, setName] = useState()
 
