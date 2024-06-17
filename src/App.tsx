@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Typography } from '@material-ui/core'
+import { Grid, Typography } from '@material-ui/core'
 import { Vote } from './components/vote/vote'
 import { Register } from './components/Register'
 
@@ -9,10 +9,14 @@ function App() {
 
   return (
     <>
- <form>
-  <Typography>Rocket Tattoo feat linikerS.Dev</Typography>
+ <Grid container>
+  <Grid>
+    <Grid>
+  <Typography >Rocket Tattoo feat linikerS.Dev</Typography>
   {isRegistred ? <Vote /> : <Register />}
- </form>
+    </Grid>
+  </Grid>
+ </Grid>
     </>
   )
 }

@@ -1,24 +1,42 @@
-import { Button, Grid, TextField } from "@material-ui/core"
+import { Button, FormControl, Grid, TextField } from "@material-ui/core"
 import { FC, FormEvent, useState } from "react"
 
 export const Register: FC = () => {
 
-    const [name, setName] = useState()
+    const [formData, setFormData] = useState({name: "", work: "",})
 
-    const handleRegister = (e: FormEvent) => {
+    const handleRegister = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault()
+
+        const { name, work } = e.target;
+        try {
+            
+            setFormData({ 
+                ...formData, 
+                name: name.value,
+                work: work.value,
+            })
+            localStorage.setItem("dataUser", JSON.stringify(formData))
+            alert("Registrado com sucesso!")
+        } catch (error) {
+            console.error("erro ao salvar ", error)
+            alert("Erro ao salvar")
+        }
     }
     return (
-    <Grid container>
-        <Grid item>
-            <TextField label="Nome" />
+    <Grid container spacing={2}>
+        <FormControl>
+
+        <Grid item xs={12}>
+            <TextField label="Nome" value={name} onChange={handleRegister}  fullWidth/>
         </Grid>
-        <Grid item>
-            <TextField label="Estudio" />
+        <Grid item xs={12}>
+            {/* <TextField label="Estudio" value={work} onChange={handleRegister}/> */}
         </Grid>
         <Grid>
-            <Button>Salvar</Button>
+            {/* <Button variant="contained" color="primary" onClick={handleRegister}>Salvar</Button> */}
         </Grid>
+        </FormControl>
     </Grid>
     )
 }
