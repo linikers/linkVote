@@ -1,7 +1,11 @@
 import { Button, FormControl, Grid, TextField } from "@material-ui/core"
 import React, { FC, FormEvent, useState } from "react"
 
-export const Register: FC = () => {
+
+interface IRegisterProps {
+    onRegister: () => void
+}
+export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
     const [formData, setFormData] = useState({name: "", work: "",})
 
@@ -18,11 +22,14 @@ export const Register: FC = () => {
         e.preventDefault()
 
         try {
-            
- 
-            localStorage.setItem("dataUser", JSON.stringify(formData))
+            const storedUsers = localStorage.getItem("users")
+            const users = storedUsers ? JSON.parse(storedUsers) : []
+            users.push(formData)
+            localStorage.setItem("users", JSON.stringify(users))
             console.log(formData)
             alert("Registrado com sucesso!")
+            setFormData({ name: "", work: ""})
+            onRegister()
         } catch (error) {
             console.error("erro ao salvar ", error)
             alert("Erro ao salvar")
