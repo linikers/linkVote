@@ -14,13 +14,14 @@ export const Register: FC = () => {
             // [work]: value,
         })
     }
-    const handleRegister = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const handleRegister = (e: FormEvent) => {
         e.preventDefault()
 
         try {
             
  
             localStorage.setItem("dataUser", JSON.stringify(formData))
+            console.log(formData)
             alert("Registrado com sucesso!")
         } catch (error) {
             console.error("erro ao salvar ", error)
@@ -28,19 +29,21 @@ export const Register: FC = () => {
         }
     }
     return (
-    <Grid container spacing={2}  onSubmit={handleRegister}>
-        <FormControl fullWidth>
+    <form onSubmit={handleRegister}>
+        <Grid container spacing={2}  >
+            <FormControl fullWidth>
 
-        <Grid item xs={12} >
-            <TextField label="Nome" value={formData.name} color="secondary" onChange={handleInputChange}  fullWidth/>
+            <Grid item xs={12} style={{ margin: "1rem" }}>
+                <TextField label="Nome" name="name" value={formData.name} color="secondary" onChange={handleInputChange}  fullWidth/>
+            </Grid>
+            <Grid item xs={12} style={{ margin: "1rem" }}>
+                <TextField label="Estudio" name="work" value={formData.work} onChange={handleInputChange}/>
+            </Grid>
+            <Grid item style={{margin: "2rem"}}>
+                <Button variant="contained" color="primary" type="submit">Salvar</Button>
+            </Grid>
+            </FormControl>
         </Grid>
-        <Grid item xs={12}>
-            <TextField label="Estudio" value={formData.work} onChange={handleRegister}/>
-        </Grid>
-        <Grid>
-            <Button variant="contained" color="primary" type="submit">Salvar</Button>
-        </Grid>
-        </FormControl>
-    </Grid>
+    </form>
     )
 }
