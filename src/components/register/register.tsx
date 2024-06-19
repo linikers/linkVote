@@ -1,13 +1,17 @@
 import { Button, FormControl, Grid, TextField } from "@material-ui/core"
 import React, { FC, FormEvent, useState } from "react"
 
-
+export interface IUser {
+    name: string;
+    work: string;
+    votes: number;
+}
 interface IRegisterProps {
     onRegister: () => void
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
-    const [formData, setFormData] = useState({name: "", work: "",})
+    const [formData, setFormData] = useState({name: "", work: "", votes: 0})
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -28,7 +32,7 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
             localStorage.setItem("users", JSON.stringify(users))
             console.log(formData)
             alert("Registrado com sucesso!")
-            setFormData({ name: "", work: ""})
+            setFormData({ name: "", work: "", votes: 0})
             onRegister()
         } catch (error) {
             console.error("erro ao salvar ", error)
