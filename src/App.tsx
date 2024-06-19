@@ -4,6 +4,7 @@ import { Grid, Typography } from '@material-ui/core'
 import { Vote } from './components/vote/vote'
 import { Register } from './components/Register'
 import { DesktopMac, Launch, RocketLaunch } from '@mui/icons-material'
+import { Header } from './components/header'
 
 function App() {
   const [isRegistred, setIsRegistred] = useState(false)
@@ -16,7 +17,7 @@ function App() {
  <Grid container>
   <Grid>
     <Grid>
-
+<Header />
   <Typography style={{ marginBottom: "3rem", display:"flex"}}>Rocket Tattoo <RocketLaunch /> feat. linikerS.Dev <DesktopMac /></Typography>
   {/* <Typography>feat.</Typography> */}
   {/* <Typography>linikerS.Dev<DesktopMac /></Typography> */}

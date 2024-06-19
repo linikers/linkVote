@@ -1,40 +1,59 @@
-import { Typography } from "@mui/material";
+import { Grid, Typography } from "@mui/material";
+import { DesktopMac, RocketLaunch } from '@mui/icons-material'
 
-.container3D {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    perspective: 1000px;
-  }
+// .container3D {
+//     display: flex;
+//     align-items: center;
+//     justify-content: center;
+//     padding: 2rem;
+//     perspective: 1000px;
+//   }
   
-  .content3D {
-    transform: rotateY(20deg);
-    transition: transform 0.5s;
-  }
+//   .content3D {
+//     transform: rotateY(20deg);
+//     transition: transform 0.5s;
+//   }
   
-  .icon3D {
-    font-size: 3rem; /* Aumenta o tamanho dos ícones */
-    margin: 0 1rem;
-    transform: translateZ(20px);
-    transition: transform 0.5s, color 0.5s;
-  }
+//   .icon3D {
+//     font-size: 3rem; /* Aumenta o tamanho dos ícones */
+//     margin: 0 1rem;
+//     transform: translateZ(20px);
+//     transition: transform 0.5s, color 0.5s;
+//   }
   
-  .icon3D:hover {
-    transform: translateZ(40px) rotateZ(10deg);
-    color: #f50057; /* Altera a cor dos ícones ao passar o mouse */
-  }
+//   .icon3D:hover {
+//     transform: translateZ(40px) rotateZ(10deg);
+//     color: #f50057; /* Altera a cor dos ícones ao passar o mouse */
+//   }
   
 export const Header = () => {
 
     return (
-        <div className="container3D">
-        <Typography className="content3D" style={{ marginBottom: "3rem", display: "flex", alignItems: "center" }}>
+        <Grid sx={{
+            display:"flex",
+            alignItems:"center",
+            justifyContent: "center",
+            padding: "2rem",
+            perspective: "1000px",
+        }}>
+        <Typography sx={{
+            transform: "rotateY(20deg)",
+            transition: "transform 0.5s",
+            marginBottom: "3rem",
+            display: "flex",
+            alignItems: "center",
+        }}>
           Rocket Tattoo 
-          <RocketLaunchIcon className="icon3D" />
+          <RocketLaunch className="icon3D" />
           feat. linikerS.Dev 
-          <DesktopMacIcon className="icon3D" />
+          <DesktopMac sx={{
+            transform: "translateZ(40px) rotateZ(10deg)",
+            margin: "0 1rem",
+            transformBox: "translateZ(20px)",
+            transition: "transform 0.5s, color 0.5s",
+          }} />
         </Typography>
-      </div>
+      </Grid>
     )
-}
+
+      }
