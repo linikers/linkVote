@@ -13,30 +13,48 @@ export const Vote: FC = () => {
         }
     }, [])
 const handleVote = (userName: string) => {
-    const updateUsers = users.map(user => user.name === userName ? {...user, votes: user.votes + 1} : user)
+    const updateUsers = users.map(
+        user => user.name === userName ? {...user, votes: user.votes + 1} 
+        : 
+        user)
     setUsers(updateUsers)
     localStorage.setItem("users", JSON.stringify(updateUsers))
     alert(`Voce votou em ${userName}`)
 
 }
+
 const totalVotes = users.reduce((total, user) => total + user.votes, 0)
+
     return(
         <form>
-        <Typography variant="h4">Vote Agora</Typography>
-        <Grid>
+        <Typography variant="h4" gutterBottom>Vote Agora</Typography>
+        <Grid container spacing={6}>
             {users.length > 0 ? (
                 users.map((user, index) => (
 
-                    <Grid>
+                    <Grid key={index} xs={12}>
                         <Typography>{user.name}</Typography>
                         <Typography>{user.work}</Typography>
-                        <Button variant="contained" color="primary" onClick={()=> handleVote(user.name)} style={{ marginTop: "0.5rem"}}>Votar</Button>
+                        <Button 
+                            variant="contained" 
+                            color="primary" 
+                            onClick={()=> handleVote(user.name)} 
+                            style={{ marginTop: "0.5rem"}}
+                        >
+                            Votar
+                        </Button>
                         <LinearProgress 
                         variant="determinate"
                         value={totalVotes > 0 ? (user.votes / totalVotes) * 100 : 0}
                         style={{ marginTop: "0.5rem", height: "10px"}}
                         />
-                        <Typography variant="caption">{user.votes} votos ({totalVotes > 0 ? ((user.votes / totalVotes) * 100).toFixed(2) : 0} %)</Typography>
+                        <Typography variant="caption">
+                            {user.votes} votos (
+                                {totalVotes > 0 
+                                ? ((user.votes / totalVotes) * 100).toFixed(2) 
+                                : 0} 
+                            {" "}%)
+                        </Typography>
                     </Grid>
                 ))
                 ) : (

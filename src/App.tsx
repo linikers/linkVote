@@ -17,8 +17,8 @@ function App() {
   <Grid>
     <Grid>
 
-  <Typography style={{ marginBottom: "3rem"}}>Rocket Tattoo <RocketLaunch /> feat. linikerS.Dev<DesktopMac /></Typography>
-  {/* <Typography>feat</Typography> */}
+  <Typography style={{ marginBottom: "3rem", display:"flex"}}>Rocket Tattoo <RocketLaunch /> feat. linikerS.Dev <DesktopMac /></Typography>
+  {/* <Typography>feat.</Typography> */}
   {/* <Typography>linikerS.Dev<DesktopMac /></Typography> */}
   </Grid>
   <Grid>
