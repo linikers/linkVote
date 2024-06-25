@@ -1,35 +1,42 @@
 import { useState } from 'react'
 import './App.css'
 import { Button, Grid, Typography } from '@material-ui/core'
+import { Header } from './components/header'
 import { Vote } from './components/vote/vote'
 import { Register } from './components/Register'
-import { DesktopMac, Launch, RocketLaunch } from '@mui/icons-material'
-import { Header } from './components/header'
+import { Top10 } from './components/Top10'
 
 function App() {
-  const [isRegistred, setIsRegistred] = useState(false)
+  const [currentPage, setCurrentPage] = useState('home')
 
-  const handleNavigateToVote = () => {
-    setIsRegistred(true)
+  const handleNavigateVote = () => {
+    setCurrentPage('vote')
   }
+  const handleNavigateRegister = () => {
+    setCurrentPage('register')
+  }
+  const handleNavigateTop10 = () => {
+    setCurrentPage('top10')
+  }
+  
   return (
     <>
  <Grid container>
   <Grid>
     <Grid>
 <Header />
-  {/* <Typography style={{ marginBottom: "3rem", display:"flex"}}>Rocket Tattoo <RocketLaunch /> feat. linikerS.Dev <DesktopMac /></Typography> */}
-  {/* <Typography>feat.</Typography> */}
-  {/* <Typography>linikerS.Dev<DesktopMac /></Typography> */}
+
   </Grid>
   <Grid>
   {/* {isRegistred ? (<Vote />) : (<Register onRegister={handleNavigateToVote} />)} */}
-    <Button>Vote Agora</Button>
-    <Button>Registre o participante</Button>
-    <Button>Top 10</Button>
-
-
-
+    <Button color='default' onClick={handleNavigateVote}>Vote Agora</Button>
+    <Button color='primary' onClick={handleNavigateRegister}>Registre o participante</Button>
+    <Button color='secondary' onClick={handleNavigateTop10}>Top 10</Button>
+    <Grid item xs={12}>
+          {currentPage === 'vote' && <Vote />}
+          {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
+          {currentPage === 'top10' && <Top10 />}
+        </Grid>
     </Grid>
   </Grid>
  </Grid>
