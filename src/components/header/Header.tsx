@@ -44,14 +44,31 @@ export const Header = () => {
             alignItems: "center",
         }}>
           Rocket Tattoo 
-          <RocketLaunch className="icon3D" />
+          <RocketLaunch sx={{
+          fontSize: "3rem",
+          transform: "translateZ(40px) rotateZ(10deg)",
+          margin: "0 1rem",
+          transformBox: "translateZ(20px)",
+          transition: "transform 0.5s, color 0.5s",
+          "&:hover": {
+              transform:"translateZ(40px) rotateZ(10deg)",
+              color: "#f50057",
+            }
+          }} 
+          />
           feat. linikerS.Dev 
           <DesktopMac sx={{
+            fontSize: "3rem",
             transform: "translateZ(40px) rotateZ(10deg)",
             margin: "0 1rem",
             transformBox: "translateZ(20px)",
             transition: "transform 0.5s, color 0.5s",
-          }} />
+            "&:hover": {
+                transform:"translateZ(40px) rotateZ(10deg)",
+                color: "#f50057",
+            }
+          }} 
+          />
         </Typography>
       </Grid>
     )
