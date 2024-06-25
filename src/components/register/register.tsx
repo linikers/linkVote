@@ -5,6 +5,7 @@ export interface IUser {
     name: string;
     work: string;
     votes: number;
+    percent: number;
 }
 interface IRegisterProps {
     onRegister: () => void
