@@ -3,11 +3,12 @@ import './App.css'
 import { Button, Grid} from '@material-ui/core'
 import { Header } from './components/header'
 import { Vote } from './pages/vote/vote'
-import { Register } from './pages/Register'
+import { IUser, Register } from './pages/Register'
 import { Top10 } from './pages/Top10'
 import { SnackBarCustom } from './components/Snackbar'
 
 function App() {
+  const [users, setUsers] = useState<IUser[]>([]);
   const [currentPage, setCurrentPage] = useState('home')
   const [snackBarMessage, setSnackBarMessage] = useState("");
   const [snackBarOpen, setSnackBarOpen] = useState(false);
@@ -42,10 +43,9 @@ function App() {
         <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
           {
             currentPage === 'vote' && 
-              <Vote onOpenSnackBar={handleOpenSnackBar} 
-            />}
+              <Vote onOpenSnackBar={handleOpenSnackBar} users={users} setUsers={setUsers} />}
           {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
-          {currentPage === 'top10' && <Top10 />}
+          {currentPage === 'top10' && <Top10  users={users}/>}
         </Grid>
       </Grid>
     </Grid>
