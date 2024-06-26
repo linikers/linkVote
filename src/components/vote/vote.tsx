@@ -43,7 +43,9 @@ export const Vote: FC = () => {
 
     return (
         <Grid container sx={{ margin: "2rem", display: "flex", flexDirection:"column", alignItems: "center"}}>
-            <Typography variant="h4" gutterBottom style={{ marginBottom: "1rem" }}>Vote Agora</Typography>
+            <Grid item>
+                <Typography variant="h4" gutterBottom style={{ marginBottom: "6rem" }}>Vote Agora</Typography>
+            </Grid>
         
             <form>
                 <Grid container spacing={6} sx={{ width:"100%" }}>
@@ -53,14 +55,23 @@ export const Vote: FC = () => {
                                 key={index}
                                 xs={12} item
                                 sx={{
+                                    // backgroundColor:"#5a108f",
                                     padding: "1rem",
-                                    // border: "1px solid #ccc",
                                     borderRadius: "8px",
                                     marginBottom: "1rem",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)"
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)",
+                                    transition: "transform 0.3s, box-shadow 0.3s",
+                                    "&:hover": {
+                                        transform: "scale(1.02)",
+                                        boxShadow: "0 16px rgba(0,0,0, 0.2",
+                                    }
                                 }}>
-                                <Typography>{user.name}</Typography>
-                                <Typography>{user.work}</Typography>
+                                <Typography 
+                                    style={{ fontWeight: "bold" }}
+                                >
+                                {user.name}
+                                </Typography>
+                                <Typography style={{ color: "#757575"}}>{user.work}</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
@@ -72,9 +83,17 @@ export const Vote: FC = () => {
                                 <LinearProgress
                                     variant="determinate"
                                     value={user.percent}
-                                    style={{ marginTop: "0.5rem", height: "10px", borderRadius: "5px" }}
+                                    style={{ 
+                                        marginTop: "0.5rem", 
+                                        height: "10px", 
+                                        borderRadius: "8px", 
+                                        backgroundColor: "#e0e0e0",
+                                        // "& .MuiLinearProgress-bar": {
+                                        //     backgroundColor: "#3f51b5",
+                                        // },
+                                    }}
                                 />
-                                <Typography variant="caption">
+                                <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
                                     {user.votes} votos ({user.percent.toFixed(2)} %)
                                 </Typography>
                             </Grid>
