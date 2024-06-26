@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import './App.css'
-import { Button, Grid, Typography } from '@material-ui/core'
+import { Button, Grid} from '@material-ui/core'
 import { Header } from './components/header'
 import { Vote } from './components/vote/vote'
 import { Register } from './components/Register'

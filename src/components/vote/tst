@@ -32,7 +32,6 @@ export const Vote: FC = () => {
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
         setTotalVotes(total);
-        console.log(total);
 
         const updatedUsersWithPercent = users.map(user => ({
             ...user,
@@ -42,39 +41,54 @@ export const Vote: FC = () => {
     }, [users]);
 
     return (
-        <Grid container sx={{ margin: "2rem", display: "flex", flexDirection:"column", alignItems: "center"}}>
-            <Typography variant="h4" gutterBottom style={{ marginBottom: "1rem" }}>Vote Agora</Typography>
+        <Grid container sx={{ margin: "2rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
+            <Typography variant="h4" gutterBottom>Vote Agora</Typography>
         
             <form>
-                <Grid container spacing={6} sx={{ width:"100%" }}>
+                <Grid container spacing={6} sx={{ width: "100%" }}>
                     {usersWithPercent.length > 0 ? (
                         usersWithPercent.map((user, index) => (
                             <Grid
                                 key={index}
-                                xs={12} item
+                                item
+                                xs={12}
                                 sx={{
                                     padding: "1rem",
-                                    // border: "1px solid #ccc",
+                                    border: "1px solid #e0e0e0",
                                     borderRadius: "8px",
                                     marginBottom: "1rem",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)"
-                                }}>
-                                <Typography>{user.name}</Typography>
-                                <Typography>{user.work}</Typography>
+                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)",
+                                    transition: "transform 0.3s, box-shadow 0.3s",
+                                    "&:hover": {
+                                        transform: "scale(1.02)",
+                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
+                                    },
+                                }}
+                            >
+                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>{user.name}</Typography>
+                                <Typography variant="body2" sx={{ color: "#757575" }}>{user.work}</Typography>
                                 <Button
                                     variant="contained"
                                     color="primary"
                                     onClick={() => handleVote(user.name)}
-                                    style={{ marginTop: "0.5rem" }}
+                                    sx={{ marginTop: "0.5rem" }}
                                 >
                                     Votar
                                 </Button>
                                 <LinearProgress
                                     variant="determinate"
                                     value={user.percent}
-                                    style={{ marginTop: "0.5rem", height: "10px", borderRadius: "5px" }}
+                                    sx={{
+                                        marginTop: "0.5rem",
+                                        height: "10px",
+                                        borderRadius: "5px",
+                                        backgroundColor: "#e0e0e0",
+                                        "& .MuiLinearProgress-bar": {
+                                            backgroundColor: "#3f51b5",
+                                        },
+                                    }}
                                 />
-                                <Typography variant="caption">
+                                <Typography variant="caption" sx={{ display: "block", marginTop: "0.5rem" }}>
                                     {user.votes} votos ({user.percent.toFixed(2)} %)
                                 </Typography>
                             </Grid>
