@@ -5,7 +5,14 @@ export interface IUser {
     name: string;
     work: string;
     votes: number;
-    percent: number;
+    percent?: number;
+    anatomy: number;
+    creativity: number;
+    pigmentation: number;
+    traces: number;
+    readability: number;
+    visualImpact: number;
+    totalScore: number;
 }
 interface IRegisterProps {
     onRegister: () => void

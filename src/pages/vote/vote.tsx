@@ -3,7 +3,10 @@ import { Grid, LinearProgress } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { IUser } from "../Register";
 
-export const Vote: FC = () => {
+interface VoteProps {
+    onOpenSnackBar: (message: string) => void;
+}
+export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
     const [users, setUsers] = useState<IUser[]>([]);
     const [totalVotes, setTotalVotes] = useState(0);
     const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
@@ -26,7 +29,7 @@ export const Vote: FC = () => {
         );
         setUsers(updatedUsers);
         localStorage.setItem("users", JSON.stringify(updatedUsers));
-        alert(`Você votou em ${userName}`);
+        onOpenSnackBar(`Você votou em ${userName}`);
     };
 
     useEffect(() => {

@@ -1,12 +1,12 @@
-import { Alert, Snackbar } from "@mui/material"
+import { Alert, AlertColor, Snackbar } from "@mui/material"
 
 interface ISnack {
-    open: () => void;
+    open: boolean;
     onClose: () => void;
     message: string;
-    severity: string; 
+    severity: AlertColor; 
 }
-export const SnackBarCustom = ({ open, onClose, message, severity }: ISnack) => {
+export const SnackBarCustom = ({ open, onClose, message, severity ='success' }: ISnack) => {
 
     return (
         <Snackbar open={open} autoHideDuration={3000} onClose={onClose}> 

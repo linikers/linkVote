@@ -5,6 +5,7 @@ import { Header } from './components/header'
 import { Vote } from './pages/vote/vote'
 import { Register } from './pages/Register'
 import { Top10 } from './pages/Top10'
+import { SnackBarCustom } from './components/Snackbar'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
@@ -20,6 +21,13 @@ function App() {
   const handleNavigateTop10 = () => {
     setCurrentPage('top10')
   }
+  const handleCloseSnackBar = () => {
+    setSnackBarOpen(false)
+  }
+  const handleOpenSnackBar = (message: string) => {
+    setSnackBarMessage(message)
+    setSnackBarOpen(true);
+  }
   
   return (
     <>
@@ -32,12 +40,21 @@ function App() {
         <Button color='primary' onClick={handleNavigateRegister}>Registre o participante</Button>
         <Button color='secondary' onClick={handleNavigateTop10}>Top 10</Button>
         <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
-          {currentPage === 'vote' && <Vote />}
+          {
+            currentPage === 'vote' && 
+              <Vote onOpenSnackBar={handleOpenSnackBar} 
+            />}
           {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
           {currentPage === 'top10' && <Top10 />}
         </Grid>
       </Grid>
     </Grid>
+    <SnackBarCustom 
+      open={snackBarOpen}
+      onClose={handleCloseSnackBar}
+      message={snackBarMessage}
+      severity="success"
+    />
   </>
   )
 }
