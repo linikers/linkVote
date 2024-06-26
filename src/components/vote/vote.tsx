@@ -34,14 +34,13 @@ export const Vote: FC = () => {
         }));
         setUsersWithPercent(updatedUsersWithPercent);
 
-        console.log("Total votes:", total);
         updatedUsersWithPercent.forEach(user => {
-            console.log(`${user.name}: ${user.votes} votos, ${user.percent.toFixed(2)}%`);
+            // console.log(`${user.name}: ${user.votes} votos, ${user.percent.toFixed(2)} %`);
         });
     }, [users]);
 
     return (
-        <>
+        <Grid container sx={{ margin: "1rem"}}>
             <Typography variant="h4" gutterBottom>Vote Agora</Typography>
         
             <form>
@@ -82,6 +81,6 @@ export const Vote: FC = () => {
                     )}
                 </Grid>
             </form>
-        </>
+        </Grid>
     );
 };

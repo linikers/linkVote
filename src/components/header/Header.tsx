@@ -1,76 +1,62 @@
-import { Grid, Typography } from "@mui/material";
-import { DesktopMac, RocketLaunch } from '@mui/icons-material'
+import { Grid, Typography, keyframes } from "@mui/material";
+import { DesktopMac, RocketLaunch } from '@mui/icons-material';
 
-// .container3D {
-//     display: flex;
-//     align-items: center;
-//     justify-content: center;
-//     padding: 2rem;
-//     perspective: 1000px;
-//   }
-  
-//   .content3D {
-//     transform: rotateY(20deg);
-//     transition: transform 0.5s;
-//   }
-  
-//   .icon3D {
-//     font-size: 3rem; /* Aumenta o tamanho dos ícones */
-//     margin: 0 1rem;
-//     transform: translateZ(20px);
-//     transition: transform 0.5s, color 0.5s;
-//   }
-  
-//   .icon3D:hover {
-//     transform: translateZ(40px) rotateZ(10deg);
-//     color: #f50057; /* Altera a cor dos ícones ao passar o mouse */
-//   }
-  
+const blink = keyframes`
+  0% { opacity: 1; }
+  50% { opacity: 0; }
+  100% { opacity: 1; }
+`;
+
+const blinkAndChangeColor = keyframes`
+  0% { opacity: 1; color: #00ff00; }  /* Green */
+  25% { opacity: 0.5; color: #ff00ff; } /* Magenta */
+  50% { opacity: 1; color: #00ffff; } /* Cyan */
+  75% { opacity: 0.5; color: #ffff00; } /* Yellow */
+  100% { opacity: 1; color: #ff0000; } /* Red */
+`;
+
 export const Header = () => {
-
-    return (
-        <Grid sx={{
-            display:"flex",
-            alignItems:"center",
-            justifyContent: "center",
-            padding: "2rem",
-            perspective: "1000px",
-        }}>
-        <Typography sx={{
-            transform: "rotateY(20deg)",
-            transition: "transform 0.5s",
-            marginBottom: "3rem",
-            display: "flex",
-            alignItems: "center",
-        }}>
-          Rocket Tattoo 
-          <RocketLaunch sx={{
+  return (
+    <Grid sx={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2rem",
+      perspective: "1000px",
+    }}>
+      <Typography sx={{
+        transform: "rotateY(20deg)",
+        transition: "transform 0.5s",
+        marginBottom: "3rem",
+        display: "flex",
+        alignItems: "center",
+        animation: `${blinkAndChangeColor} 2s infinite`,
+      }}>
+        Rocket Tattoo 
+        <RocketLaunch sx={{
           fontSize: "3rem",
           transform: "translateZ(40px) rotateZ(10deg)",
           margin: "0 1rem",
-          transformBox: "translateZ(20px)",
           transition: "transform 0.5s, color 0.5s",
+          animation: `${blinkAndChangeColor} 2s infinite`,
           "&:hover": {
-              transform:"translateZ(40px) rotateZ(10deg)",
-              color: "#f50057",
-            }
-          }} 
-          />
-          feat. linikerS.Dev 
-          <DesktopMac sx={{
-            fontSize: "3rem",
             transform: "translateZ(40px) rotateZ(10deg)",
-            margin: "0 1rem",
-            transformBox: "translateZ(20px)",
-            transition: "transform 0.5s, color 0.5s",
-            "&:hover": {
-                transform:"translateZ(40px) rotateZ(10deg)",
-                color: "#f50057",
-            }
-          }} 
-          />
-        </Typography>
-      </Grid>
-    )
-
-      }
+          }
+        }} 
+        />
+        feat. linikerS.Dev 
+        <DesktopMac sx={{
+          fontSize: "3rem",
+          transform: "translateZ(40px) rotateZ(10deg)",
+          margin: "0 1rem",
+          transition: "transform 0.5s, color 0.5s",
+          animation: `${blinkAndChangeColor} 2s infinite`,
+          "&:hover": {
+            transform: "translateZ(40px) rotateZ(10deg)",
+          }
+        }} 
+        />
+      </Typography>
+    </Grid>
+  )
+}
