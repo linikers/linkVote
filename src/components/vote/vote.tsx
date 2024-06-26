@@ -11,7 +11,12 @@ export const Vote: FC = () => {
     useEffect(() => {
         const storedUsers = localStorage.getItem("users");
         if (storedUsers) {
-            setUsers(JSON.parse(storedUsers));
+            const parsedUsers = JSON.parse(storedUsers);
+            const initializedUsers = parsedUsers.map((user: IUser) => ({
+                ...user,
+                votes: user.votes || 0, // Garantir que todos os usuários tenham o campo 'votes' inicializado
+            }));
+            setUsers(initializedUsers);
         }
     }, []);
 
@@ -27,16 +32,13 @@ export const Vote: FC = () => {
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
         setTotalVotes(total);
+        console.log(total);
 
         const updatedUsersWithPercent = users.map(user => ({
             ...user,
-            percent: total > 0 ? ((user.votes / total) * 100) : 5
+            percent: total > 0 ? ((user.votes / total) * 100) : 0,
         }));
         setUsersWithPercent(updatedUsersWithPercent);
-
-        updatedUsersWithPercent.forEach(user => {
-            // console.log(`${user.name}: ${user.votes} votos, ${user.percent.toFixed(2)} %`);
-        });
     }, [users]);
 
     return (
