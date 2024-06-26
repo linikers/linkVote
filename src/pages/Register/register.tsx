@@ -1,7 +1,9 @@
 import { Button, FormControl, Grid, TextField } from "@material-ui/core"
 import React, { FC, FormEvent, useState } from "react"
+import { SnackBarCustom } from "../../components/Snackbar";
 
 export interface IUser {
+    id: number;
     name: string;
     work: string;
     votes: number;
@@ -19,7 +21,7 @@ interface IRegisterProps {
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
-    const [formData, setFormData] = useState({name: "", work: "", votes: 0})
+    const [formData, setFormData] = useState({id:"", name: "", work: "", votes: 0})
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -35,16 +37,26 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
         try {
             const storedUsers = localStorage.getItem("users")
-            const users = storedUsers ? JSON.parse(storedUsers) : []
-            users.push(formData)
-            localStorage.setItem("users", JSON.stringify(users))
+            const users: IUser[] = storedUsers ? JSON.parse(storedUsers) : []
+            // users.push(formData)
+            const userExists = user.some(user => user.name === formData.name)
+            if(userExists) {
+                // SnackBarCustom(`Esse competidor já foi cadastrado ${userName}`)
+                return
+            }
+            const newUser = {
+                ...formData,
+                id: uuidV4(),
+            }
+            users.push(newUser)
+            localStorage.setItem("users", JSON.stringify(users));
             // console.log(formData)
-            alert("Registrado com sucesso!")
-            setFormData({ name: "", work: "", votes: 0})
-            onRegister()
+            SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
+            setFormData({id: "", name: "", work: "", votes: 0});
+            onRegister();
         } catch (error) {
             // console.error("erro ao salvar ", error)
-            alert("Erro ao salvar")
+            SnackBarCustom({message: "Erro ao salvar", severity: "error"})
         }
     }
     return (

@@ -50,8 +50,8 @@ function App() {
       </Grid>
     </Grid>
     <SnackBarCustom 
-      open={snackBarOpen}
-      onClose={handleCloseSnackBar}
+      // open={snackBarOpen}
+      // onClose={handleCloseSnackBar}
       message={snackBarMessage}
       severity="success"
     />

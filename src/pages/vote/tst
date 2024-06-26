@@ -1,103 +1,55 @@
-import { Button, Typography } from "@material-ui/core";
-import { Grid, LinearProgress } from "@mui/material";
-import { FC, useEffect, useState } from "react";
+import { Grid, Typography, Box, Paper } from "@mui/material";
 import { IUser } from "../Register";
+import { FC } from "react";
 
-export const Vote: FC = () => {
-    const [users, setUsers] = useState<IUser[]>([]);
-    const [totalVotes, setTotalVotes] = useState(0);
-    const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
+interface Top10Props {
+  users: IUser[];
+}
 
-    useEffect(() => {
-        const storedUsers = localStorage.getItem("users");
-        if (storedUsers) {
-            const parsedUsers = JSON.parse(storedUsers);
-            const initializedUsers = parsedUsers.map((user: IUser) => ({
-                ...user,
-                votes: user.votes || 0,
-            }));
-            setUsers(initializedUsers);
-        }
-    }, []);
+export const Top10: FC<Top10Props> = ({ users }) => {
+  const sortedUsers = [...users].sort((a, b) => b.totalScore - a.totalScore).slice(0, 100);
 
-    const handleVote = (userName: string) => {
-        const updatedUsers = users.map(
-            user => user.name === userName ? { ...user, votes: user.votes + 1 } : user
-        );
-        setUsers(updatedUsers);
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
-        alert(`Você votou em ${userName}`);
-    };
-
-    useEffect(() => {
-        const total = users.reduce((total, user) => total + user.votes, 0);
-        setTotalVotes(total);
-
-        const updatedUsersWithPercent = users.map(user => ({
-            ...user,
-            percent: total > 0 ? ((user.votes / total) * 100) : 0,
-        }));
-        setUsersWithPercent(updatedUsersWithPercent);
-    }, [users]);
-
-    return (
-        <Grid container sx={{ margin: "2rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
-            <Typography variant="h4" gutterBottom>Vote Agora</Typography>
-        
-            <form>
-                <Grid container spacing={6} sx={{ width: "100%" }}>
-                    {usersWithPercent.length > 0 ? (
-                        usersWithPercent.map((user, index) => (
-                            <Grid
-                                key={index}
-                                item
-                                xs={12}
-                                sx={{
-                                    padding: "1rem",
-                                    border: "1px solid #e0e0e0",
-                                    borderRadius: "8px",
-                                    marginBottom: "1rem",
-                                    boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)",
-                                    transition: "transform 0.3s, box-shadow 0.3s",
-                                    "&:hover": {
-                                        transform: "scale(1.02)",
-                                        boxShadow: "0 8px 16px rgba(0, 0, 0, 0.2)",
-                                    },
-                                }}
-                            >
-                                <Typography variant="h6" sx={{ fontWeight: "bold" }}>{user.name}</Typography>
-                                <Typography variant="body2" sx={{ color: "#757575" }}>{user.work}</Typography>
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    onClick={() => handleVote(user.name)}
-                                    sx={{ marginTop: "0.5rem" }}
-                                >
-                                    Votar
-                                </Button>
-                                <LinearProgress
-                                    variant="determinate"
-                                    value={user.percent}
-                                    sx={{
-                                        marginTop: "0.5rem",
-                                        height: "10px",
-                                        borderRadius: "5px",
-                                        backgroundColor: "#e0e0e0",
-                                        "& .MuiLinearProgress-bar": {
-                                            backgroundColor: "#3f51b5",
-                                        },
-                                    }}
-                                />
-                                <Typography variant="caption" sx={{ display: "block", marginTop: "0.5rem" }}>
-                                    {user.votes} votos ({user.percent.toFixed(2)} %)
-                                </Typography>
-                            </Grid>
-                        ))
-                    ) : (
-                        <Typography variant="body1">Nenhum participante cadastrado</Typography>
-                    )}
-                </Grid>
-            </form>
+  return (
+    <Grid container spacing={2} sx={{ margin: "2rem" }}>
+      <Grid item xs={12}>
+        <Typography variant="h4" gutterBottom sx={{ textAlign: "center", marginBottom: "2rem" }}>
+          Top 100 Participantes
+        </Typography>
+      </Grid>
+      {sortedUsers.map((user, index) => (
+        <Grid item xs={12} sm={6} md={4} lg={3} key={index}>
+          <Paper elevation={3} sx={{ padding: "1rem", borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)" }}>
+            <Box sx={{ textAlign: "center", marginBottom: "1rem" }}>
+              <Typography variant="h6" sx={{ fontWeight: "bold" }}>
+                {index + 1}. {user.name}
+              </Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Anatomia: {user.anatomy}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Criatividade: {user.creativity}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Pigmentação: {user.pigmentation}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Traços: {user.traces}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Legibilidade: {user.readability}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1">Impacto Visual: {user.visualImpact}</Typography>
+            </Box>
+            <Box sx={{ marginBottom: "0.5rem" }}>
+              <Typography variant="body1" sx={{ fontWeight: "bold" }}>
+                Nota Geral: {user.totalScore}
+              </Typography>
+            </Box>
+          </Paper>
         </Grid>
-    );
+      ))}
+    </Grid>
+  );
 };
