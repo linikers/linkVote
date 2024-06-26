@@ -2,12 +2,14 @@ import { useState } from 'react'
 import './App.css'
 import { Button, Grid} from '@material-ui/core'
 import { Header } from './components/header'
-import { Vote } from './components/vote/vote'
-import { Register } from './components/Register'
-import { Top10 } from './components/Top10'
+import { Vote } from './pages/vote/vote'
+import { Register } from './pages/Register'
+import { Top10 } from './pages/Top10'
 
 function App() {
   const [currentPage, setCurrentPage] = useState('home')
+  const [snackBarMessage, setSnackBarMessage] = useState("");
+  const [snackBarOpen, setSnackBarOpen] = useState(false);
 
   const handleNavigateVote = () => {
     setCurrentPage('vote')

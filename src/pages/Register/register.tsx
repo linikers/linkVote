@@ -31,12 +31,12 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
             const users = storedUsers ? JSON.parse(storedUsers) : []
             users.push(formData)
             localStorage.setItem("users", JSON.stringify(users))
-            console.log(formData)
+            // console.log(formData)
             alert("Registrado com sucesso!")
             setFormData({ name: "", work: "", votes: 0})
             onRegister()
         } catch (error) {
-            console.error("erro ao salvar ", error)
+            // console.error("erro ao salvar ", error)
             alert("Erro ao salvar")
         }
     }

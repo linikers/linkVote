@@ -55,7 +55,7 @@ export const Vote: FC = () => {
                                 key={index}
                                 xs={12} item
                                 sx={{
-                                    // backgroundColor:"#5a108f",
+                                    backgroundColor:"#3d2b1f",
                                     padding: "1rem",
                                     borderRadius: "8px",
                                     marginBottom: "1rem",
@@ -76,18 +76,20 @@ export const Vote: FC = () => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => handleVote(user.name)}
-                                    style={{ marginTop: "0.5rem" }}
+                                    style={{ marginTop: "0.5rem", backgroundColor: "#635147" }}
                                 >
                                     Votar
                                 </Button>
                                 <LinearProgress
                                     variant="determinate"
                                     value={user.percent}
-                                    style={{ 
+                                    sx={{ 
+                                        backgroundColor: "#414141",
+                                        // color: "#635147",
                                         marginTop: "0.5rem", 
                                         height: "10px", 
                                         borderRadius: "8px", 
-                                        backgroundColor: "#e0e0e0",
+                                        // backgroundColor: "#e0e0e0",
                                         // "& .MuiLinearProgress-bar": {
                                         //     backgroundColor: "#3f51b5",
                                         // },
