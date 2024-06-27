@@ -2,8 +2,6 @@ import { Alert, AlertColor, Snackbar } from "@mui/material"
 import { useEffect, useState } from "react";
 
 interface ISnack {
-    // open: boolean;
-    // onClose: () => void;
     message?: string;
     severity: AlertColor; 
 }
