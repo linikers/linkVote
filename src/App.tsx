@@ -11,7 +11,7 @@ function App() {
   const [users, setUsers] = useState<IUser[]>([]);
   const [currentPage, setCurrentPage] = useState('home')
   const [snackBarMessage, setSnackBarMessage] = useState("");
-  const [snackBarOpen, setSnackBarOpen] = useState(false);
+  const [, setSnackBarOpen] = useState(false);
 
   const handleNavigateVote = () => {
     setCurrentPage('vote')
@@ -46,7 +46,6 @@ function App() {
           display: "flex", 
           flexDirection: "row", 
           alignItems: "center" ,
-          // marginBottom:"4rem",
         }}
       >
         <Button color='default' onClick={handleNavigateVote}>Vote Agora</Button>

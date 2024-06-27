@@ -1,18 +1,16 @@
 import { Grid, Typography, keyframes } from "@mui/material";
 import { DesktopMac, RocketLaunch } from '@mui/icons-material';
 
-const blink = keyframes`
-  0% { opacity: 1; }
-  50% { opacity: 0; }
-  100% { opacity: 1; }
-`;
-
 const blinkAndChangeColor = keyframes`
   0% { opacity: 1; color: #00ff00; }  /* Green */
   25% { opacity: 0.5; color: #ff00ff; } /* Magenta */
   50% { opacity: 1; color: #00ffff; } /* Cyan */
   75% { opacity: 0.5; color: #ffff00; } /* Yellow */
   100% { opacity: 1; color: #ff0000; } /* Red */
+  75% { opacity: 0.5; color: #ffff00; } /* Yellow */
+  50% { opacity: 1; color: #00ffff; } /* Cyan */
+  25% { opacity: 0.5; color: #ff00ff; } /* Magenta */
+  0% { opacity: 1; color: #00ff00; }  /* Green */
 `;
 
 export const Header = () => {
@@ -22,7 +20,7 @@ export const Header = () => {
       alignItems: "center",
       justifyContent: "center",
       padding: "2rem",
-      perspective: "1000px",
+      perspective: "800px",
     }}>
       <Typography sx={{
         transform: "rotateY(20deg)",

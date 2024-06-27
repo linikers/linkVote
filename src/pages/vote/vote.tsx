@@ -8,8 +8,8 @@ interface VoteProps {
     setUsers: (users: IUser[]) => void;
 }
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
-    // const [users, setUsers] = useState<IUser[]>([]);
-    const [totalVotes, setTotalVotes] = useState(0);
+
+    const [, setTotalVotes] = useState(0);
     const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
 
     useEffect(() => {
@@ -183,7 +183,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {user.votes} votos ({user.percent?.toFixed(2)} %)
+                                    {user.votes} votos ({user.percent?.toFixed()} %)
                                 </Typography>
                             </Grid>
                         ))
