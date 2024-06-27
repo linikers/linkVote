@@ -65,7 +65,15 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     }, [users]);
 
     return (
-        <Grid container sx={{ margin: "2rem", display: "flex", flexDirection:"column", alignItems: "center"}}>
+        <Grid container 
+            sx={{ 
+                margin: "2rem", 
+                display: "flex", 
+                flexDirection:"column", 
+                alignItems: "center", 
+                maxWidth: "80%"
+            }}
+        >
             <Grid item>
                 <Typography variant="h4" gutterBottom style={{ marginBottom: "6rem" }}>Vote Agora</Typography>
             </Grid>
@@ -78,7 +86,10 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                 key={index}
                                 xs={12} item
                                 sx={{
-                                    backgroundColor:"#3d2b1f",
+                                    display: "flex",
+                                    flexDirection: "column",
+                                    justifyContent: "center",
+                                    backgroundColor:"#6c757d",
                                     padding: "1rem",
                                     borderRadius: "8px",
                                     marginBottom: "1rem",
@@ -154,7 +165,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     variant="contained"
                                     color="primary"
                                     onClick={() => handleVote(user.name)}
-                                    style={{ marginTop: "0.5rem", backgroundColor: "#635147" }}
+                                    style={{ marginTop: "0.5rem", backgroundColor: "#adb5bd", width: "6rem" }}
                                 >
                                     Votar
                                 </Button>
@@ -163,14 +174,12 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     value={user.percent}
                                     sx={{ 
                                         backgroundColor: "#414141",
-                                        // color: "#635147",
                                         marginTop: "0.5rem", 
                                         height: "10px", 
                                         borderRadius: "8px", 
-                                        // backgroundColor: "#e0e0e0",
-                                        // "& .MuiLinearProgress-bar": {
-                                        //     backgroundColor: "#3f51b5",
-                                        // },
+                                        "& .MuiLinearProgress-bar": {
+                                            backgroundColor: "#3f51b5",
+                                        },
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>

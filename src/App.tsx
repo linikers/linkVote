@@ -22,9 +22,7 @@ function App() {
   const handleNavigateTop10 = () => {
     setCurrentPage('top10')
   }
-  // const handleCloseSnackBar = () => {
-  //   setSnackBarOpen(false)
-  // }
+
   const handleOpenSnackBar = (message: string) => {
     setSnackBarMessage(message)
     setSnackBarOpen(true);
@@ -32,26 +30,38 @@ function App() {
   
   return (
     <>
-    <Grid container style={{ margin: "1rem", display: "flex", flexDirection: "column", alignItems: "center" }}>
+    <Grid container 
+      style={{ 
+        display: "flex", 
+        flexDirection: "column", 
+        alignItems: "center" ,
+        margin: "1rem", 
+      }}
+    >
       <Grid item>
         <Header />
       </Grid>
-      <Grid item style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+      <Grid item 
+        style={{ 
+          display: "flex", 
+          flexDirection: "row", 
+          alignItems: "center" ,
+          // marginBottom:"4rem",
+        }}
+      >
         <Button color='default' onClick={handleNavigateVote}>Vote Agora</Button>
         <Button color='primary' onClick={handleNavigateRegister}>Registre o participante</Button>
         <Button color='secondary' onClick={handleNavigateTop10}>Top 10</Button>
-        <Grid item xs={12} style={{ display: "flex", justifyContent: "center" }}>
-          {
-            currentPage === 'vote' && 
-              <Vote onOpenSnackBar={handleOpenSnackBar} users={users} setUsers={setUsers} />}
+      </Grid>
+        <Grid item xs={12} style={{ 
+          display: "flex", justifyContent: "center" }}>
+          {currentPage === 'vote' && 
+            <Vote onOpenSnackBar={handleOpenSnackBar} users={users} setUsers={setUsers} />}
           {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
           {currentPage === 'top10' && <Top10  users={users}/>}
         </Grid>
-      </Grid>
     </Grid>
     <SnackBarCustom 
-      // open={snackBarOpen}
-      // onClose={handleCloseSnackBar}
       message={snackBarMessage}
       severity="success"
     />
