@@ -84,7 +84,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                         usersWithPercent.map((user, index) => (
                             <Grid
                                 key={index}
-                                xs={12} item
+                                item
                                 sx={{
                                     display: "flex",
                                     flexDirection: "column",
