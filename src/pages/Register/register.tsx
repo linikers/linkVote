@@ -1,9 +1,10 @@
-import { Button, FormControl, Grid, TextField } from "@material-ui/core"
-import React, { FC, FormEvent, useState } from "react"
+import { Button, FormControl, Grid, TextField } from "@material-ui/core";
+import React, { FC, FormEvent, useState } from "react";
 import { SnackBarCustom } from "../../components/Snackbar";
+import { v4 as uuidV4 } from "uuid";
 
 export interface IUser {
-    id: number;
+    id: string;
     name: string;
     work: string;
     votes: number;
@@ -20,8 +21,21 @@ interface IRegisterProps {
     onRegister: () => void
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
-
-    const [formData, setFormData] = useState({id:"", name: "", work: "", votes: 0})
+    console.log(uuidV4)
+    const [formData, setFormData] = useState({
+        id: "",
+        name: "",
+        work: "",
+        votes: 0,
+        percent: 0,
+        anatomy: 0,
+        creativity: 0,
+        pigmentation: 0,
+        traces: 0,
+        readability: 0,
+        visualImpact: 0,
+        totalScore: 0,
+    })
 
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -39,7 +53,7 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
             const storedUsers = localStorage.getItem("users")
             const users: IUser[] = storedUsers ? JSON.parse(storedUsers) : []
             // users.push(formData)
-            const userExists = user.some(user => user.name === formData.name)
+            const userExists = users.some(user => user.name === formData.name)
             if(userExists) {
                 // SnackBarCustom(`Esse competidor já foi cadastrado ${userName}`)
                 return
@@ -52,7 +66,20 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
             localStorage.setItem("users", JSON.stringify(users));
             // console.log(formData)
             SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
-            setFormData({id: "", name: "", work: "", votes: 0});
+            setFormData({
+                id: "",
+                name: "",
+                work: "",
+                votes: 0,
+                percent: 0,
+                anatomy: 0,
+                creativity: 0,
+                pigmentation: 0,
+                traces: 0,
+                readability: 0,
+                visualImpact: 0,
+                totalScore: 0
+            });
             onRegister();
         } catch (error) {
             // console.error("erro ao salvar ", error)

@@ -56,7 +56,6 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
         setTotalVotes(total);
-        // console.log(total);
 
         const updatedUsersWithPercent = users.map(user => ({
             ...user,

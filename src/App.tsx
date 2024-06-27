@@ -22,9 +22,9 @@ function App() {
   const handleNavigateTop10 = () => {
     setCurrentPage('top10')
   }
-  const handleCloseSnackBar = () => {
-    setSnackBarOpen(false)
-  }
+  // const handleCloseSnackBar = () => {
+  //   setSnackBarOpen(false)
+  // }
   const handleOpenSnackBar = (message: string) => {
     setSnackBarMessage(message)
     setSnackBarOpen(true);

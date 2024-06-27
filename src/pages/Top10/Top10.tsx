@@ -1,6 +1,6 @@
+import { FC } from "react"
 import { Box, Grid, Paper, Typography } from "@mui/material"
 import { IUser } from "../Register"
-import { FC } from "react"
 
 interface Top10Props {
     users: IUser[]
@@ -16,7 +16,13 @@ export const Top10:FC<Top10Props> = ({ users }) => {
             </Grid>
             {sortedUsers.map((user, index) => (
                 <Grid key={index} item xs={12} sm={6} md={4} lg={3}>
-                    <Paper sx={{ borderRadius: "8px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)"}}>
+                    <Paper sx={{ 
+                        boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)", 
+                        backgroundColor: "#e3d5ca", 
+                        borderRadius: "8px", 
+                        padding: "1rem"
+                        }}
+                    >
                         <Box sx={{ textAlign: "center", marginBottom: "1rem"}}>
                             <Typography variant="h6" sx={{ fontWeight: "bold"}}>{index + 1}. {user.name}</Typography>
                         </Box>
@@ -32,7 +38,7 @@ export const Top10:FC<Top10Props> = ({ users }) => {
                     </Paper>
                  
 
-                </Grid>
+            </Grid>
             ))}
         </Grid>
     )
