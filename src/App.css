@@ -2,9 +2,9 @@ body, html {
   margin: 0;
   padding: 0;
   height: 100%;
-  /* display: flex;
+  display: flex;
   flex-direction: column;
-  align-items: center; */
+  align-items: center;
 }
 
 header, .menu {
@@ -30,7 +30,6 @@ main {
   display: flex;
   flex-direction: column;
   align-items: center;
-  width: 100%;
   margin: 1rem;
   padding-top: 4rem; /* Espaço para o cabeçalho fixo */
 }

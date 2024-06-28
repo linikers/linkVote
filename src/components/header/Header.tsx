@@ -2,15 +2,15 @@ import { Grid, Typography, keyframes } from "@mui/material";
 import { DesktopMac, RocketLaunch } from '@mui/icons-material';
 
 const blinkAndChangeColor = keyframes`
-  0% { opacity: 1; color: #00ff00; }  /* Green */
-  25% { opacity: 0.5; color: #ff00ff; } /* Magenta */
-  50% { opacity: 1; color: #00ffff; } /* Cyan */
-  75% { opacity: 0.5; color: #ffff00; } /* Yellow */
-  100% { opacity: 1; color: #ff0000; } /* Red */
-  75% { opacity: 0.5; color: #ffff00; } /* Yellow */
-  50% { opacity: 1; color: #00ffff; } /* Cyan */
-  25% { opacity: 0.5; color: #ff00ff; } /* Magenta */
-  0% { opacity: 1; color: #00ff00; }  /* Green */
+  0% { opacity: 1; color: #ff00ff; }
+  25% { opacity: 0.5; color: #ff00ff; }
+  50% { opacity: 1; color: #ff00ff; }
+  75% { opacity: 0.5; color: #ff00ff; } 
+  100% { opacity: 1; color: #ff00ff; } 
+  75% { opacity: 0.5; color: #ff00ff; }
+  50% { opacity: 1; color: #ff00ff; }
+  25% { opacity: 0.5; color: #ff00ff; }
+  0% { opacity: 1; color: #ff00ff; }
 `;
 
 export const Header = () => {
