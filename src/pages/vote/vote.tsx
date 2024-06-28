@@ -71,7 +71,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 display: "flex", 
                 flexDirection:"column", 
                 alignItems: "center", 
-                maxWidth: "80%"
+                minWidth: "360px",
             }}
         >
             <Grid item>
