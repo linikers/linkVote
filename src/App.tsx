@@ -36,9 +36,11 @@ function App() {
         flexDirection: "column", 
         alignItems: "center" ,
         margin: "1rem", 
+        width: "100%", 
+        boxSizing: "border-box",
       }}
     >
-      <Grid item>
+      <Grid item style={{ width: "100%", maxWidth: "1200px" }}>
         <Header />
       </Grid>
       <Grid item 
@@ -47,7 +49,7 @@ function App() {
           flexDirection: "row", 
           alignItems: "center" ,
           justifyContent: "center",
-        }}
+          width: "100%",        }}
       >
         <Button color= 'secondary' onClick={handleNavigateVote}>Vote Agora</Button>
         <Button color= 'secondary' onClick={handleNavigateRegister}>Registre o participante</Button>
