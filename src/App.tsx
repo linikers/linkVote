@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import './App.css'
+// import './App.css'
 import { Button, Grid} from '@material-ui/core'
 import { Header } from './components/header'
 import { Vote } from './pages/vote/vote'
@@ -46,9 +46,7 @@ function App() {
           display: "flex", 
           flexDirection: "row", 
           alignItems: "center" ,
-          flexWrap: "wrap",
           justifyContent: "center",
-          width: "100%",
         }}
       >
         <Button color= 'secondary' onClick={handleNavigateVote}>Vote Agora</Button>
