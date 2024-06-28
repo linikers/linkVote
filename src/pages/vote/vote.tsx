@@ -71,14 +71,14 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 display: "flex", 
                 flexDirection:"column", 
                 alignItems: "center", 
-                minWidth: "360px",
+                minWidth: "320px",
             }}
         >
             <Grid item>
                 <Typography variant="h4" gutterBottom style={{ marginBottom: "6rem" }}>Vote Agora</Typography>
             </Grid>
         
-            <form>
+            <form style={{ width: "100%" }}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
                     {usersWithPercent.length > 0 ? (
                         usersWithPercent.map((user, index) => (
