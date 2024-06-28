@@ -21,6 +21,7 @@ export const Header = () => {
       justifyContent: "center",
       padding: "2rem",
       perspective: "800px",
+      flexDirection: { xs: "column", sm: "row" },
     }}>
       <Typography sx={{
         transform: "rotateY(20deg)",
@@ -29,6 +30,7 @@ export const Header = () => {
         display: "flex",
         alignItems: "center",
         animation: `${blinkAndChangeColor} 2s infinite`,
+        flexDirection: { xs: "column", sm: "row" },
       }}>
         Rocket Tattoo 
         <RocketLaunch sx={{

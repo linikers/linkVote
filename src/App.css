@@ -12,7 +12,7 @@ header, .menu {
   top: 0;
   width: 100%;
   background-color: white;
-  z-index: 1000; /* Para manter o cabeçalho sobre os outros elementos */
+  z-index: 1000; 
   display: flex;
   justify-content: center;
   padding: 1rem 0;
@@ -55,4 +55,12 @@ main {
 
 .read-the-docs {
   color: #888;
+}
+@media (max-width: 320) {
+  header, .menu {
+    flex-direction: column;
+  }
+  .menu button {
+    width: "100%";
+  }
 }

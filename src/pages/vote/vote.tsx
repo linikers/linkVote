@@ -95,7 +95,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     marginBottom: "1rem",
                                     boxShadow: "0 4px 8px rgba(0, 0, 0, 0.4)",
                                     transition: "transform 0.3s, box-shadow 0.3s",
-                                    minWidth: "360px",
+                                    minWidth: "320px",
                                     "&:hover": {
                                         transform: "scale(1.02)",
                                         boxShadow: "0 16px rgba(0,0,0, 0.2",
