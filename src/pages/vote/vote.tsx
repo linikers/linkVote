@@ -1,12 +1,49 @@
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { IUser } from "../Register";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+const schema = yup.object({
+    anatomy: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    creativity: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    pigmentation: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    traces: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    readability: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    visualImpact: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+
+})
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
     users: IUser[];
     setUsers: (users: IUser[]) => void;
 }
+
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
 
     const [, setTotalVotes] = useState(0);
@@ -43,15 +80,39 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         localStorage.setItem("users", JSON.stringify(updatedUsers));
         onOpenSnackBar(`Você votou em ${userName}`);
     };
-    const handleInputChange = (userName: string, field: keyof IUser, value: number) => {
-        const updatedUsers = users.map(user => {
-            if(user.name === userName) {
-                return {...user, [field]: value}
-            }
-            return user;
-        });
-        setUsers(updatedUsers)    
-    }
+
+    const formik = useFormik({
+        initialValues: {
+            anatomy: 0,
+            creativity: 0,
+            pigmentation: 0,
+            traces: 0,
+            readability: 0,
+            visualImpact: 0,
+        },
+        validationSchema: schema,
+        onSubmit: (values, {resetForm} => {
+            const updatedUsers = users.map((user) => {
+                if(user.name === values.userName) {
+                    return { ...user, ...values }
+                }
+                return user
+            })
+            setUsers(updatedUsers)
+            localStorage.setItem("users", JSON.stringify(updatedUsers));
+            onOpenSnackBar(`Você votou em ${values.userName}`);
+            resetForm();
+        })
+    })
+    // const handleInputChange = (userName: string, field: keyof IUser, value: number) => {
+    //     const updatedUsers = users.map(user => {
+    //         if(user.name === userName) {
+    //             return {...user, [field]: value}
+    //         }
+    //         return user;
+    //     });
+    //     setUsers(updatedUsers)    
+    // }
 
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
