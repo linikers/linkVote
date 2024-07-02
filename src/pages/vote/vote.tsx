@@ -62,10 +62,10 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         fetchData()
     }, [setUsers]);
 
-    const handleVote = (userName: string) => {
+    const handleVote = async (userName: string) => {
         const updatedUsers = users.map(user => {
             if(user.name === userName) {
-                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.traces + user.readability + user.visualImpact
+                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact
                 return {...user, votes:user.votes + 1, totalScore}
             }
             return user;
@@ -93,7 +93,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         validationSchema: schema,
         onSubmit: async (values, {resetForm}) => {
             const updatedUsers = users.map((user) => {
-                if(user.name === values.userName) {
+                if(user.name === values.name) {
                     return { ...user, ...values }
                 }
                 return user
@@ -105,7 +105,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: 'votes', value: updatedUsers }),
             })
-            onOpenSnackBar(`Você votou em ${values.userName}`);
+            onOpenSnackBar(`Você votou em ${values.name}`);
             resetForm();
         }
     })

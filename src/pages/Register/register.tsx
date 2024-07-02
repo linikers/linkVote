@@ -21,7 +21,7 @@ interface IRegisterProps {
     onRegister: () => void
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
-    console.log(uuidV4)
+
     const [formData, setFormData] = useState({
         id: "",
         name: "",
@@ -43,19 +43,20 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
         setFormData({ 
             ...formData, 
             [name]: value,
-            // [work]: value,
+
         })
     }
-    const handleRegister = (e: FormEvent) => {
+    const handleRegister = async (e: FormEvent) => {
         e.preventDefault()
 
         try {
-            const storedUsers = localStorage.getItem("users")
-            const users: IUser[] = storedUsers ? JSON.parse(storedUsers) : []
+            // const storedUsers = localStorage.getItem("users")
+            const response = await fetch('/api/get?key=users');
+            const users: IUser[] = response.ok ? await response.json() : []
             // users.push(formData)
             const userExists = users.some(user => user.name === formData.name)
             if(userExists) {
-                // SnackBarCustom(`Esse competidor já foi cadastrado ${userName}`)
+                    SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
                 return
             }
             const newUser = {
@@ -63,8 +64,14 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                 id: uuidV4(),
             }
             users.push(newUser)
-            localStorage.setItem("users", JSON.stringify(users));
+            // localStorage.setItem("users", JSON.stringify(users));
             // console.log(formData)
+            await fetch('/api/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json'},
+                body: JSON.stringify({ key: 'users', value: JSON.stringify(users) })
+            });
+
             SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
             setFormData({
                 id: "",
