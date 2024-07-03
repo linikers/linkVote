@@ -50,8 +50,8 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
         e.preventDefault()
 
         try {
-            const response = await fetch('http://localhost:5000/api/get?key=users');
-            // const response = await fetch('/api/get?key=users');
+            // const response = await fetch('http://localhost:5000/api/get?key=users');
+            const response = await fetch('/api/get?key=users');
             const users: IUser[] = response.ok ? await response.json() : []
 
             const userExists = users.some(user => user.name === formData.name)

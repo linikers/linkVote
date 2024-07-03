@@ -1,20 +1,22 @@
 import express from "express";
 import { put, list } from "@vercel/blob";
-// import multer from "multer";
+import dotenv from "dotenv";
+import cors from "cors"
 
-
+dotenv.config()
 const app = express();
-// const upload = multer({ dest: 'competidores/' })
+
 const blobServiceClient = {
     token: process.env.BLOB_READ_WRITE_TOKEN,
 };
 
 app.use(express.json());
+app.use(cors())
 
 app.post('/api/save', async (request, response)=> {
     try {
         const { key, value } = request.body;
-        const blob = await put(`data/${key}.json`, value, {
+        const blob = await put(`data/${key}.json`, Buffer.from(JSON.stringify(value)), {
             contentType: 'application/json',
             access: 'public',
             token: blobServiceClient.token
@@ -31,7 +33,7 @@ app.get('/api/get', async(request, response) => {
     try {
         
         const { key } = request.query;
-        const blobs = await list({ prefix: `data/${key}.json` });
+        const blobs = await list({ prefix: `data/${key}.json`, token: blobServiceClient.token });
         if( blobs.blobs.length > 0 ) {
             const blob = blobs.blobs[0];
             const data = await fetch(blob.url).then(response => response.json())
@@ -40,8 +42,8 @@ app.get('/api/get', async(request, response) => {
             response.status(404).json({ error: `Dados não encontrados`})
         }
     } catch (error) {
-        console.error(error)
-        response.status(500).json({ error: error.message})
+        console.error(error);
+        response.status(500).json({ error: error.message});
     }
 })
 

@@ -1,12 +1,12 @@
 import { Alert, AlertColor, Snackbar } from "@mui/material"
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 
 interface ISnack {
     message?: string;
-    severity: AlertColor; 
+    severity: "success" | "error" | "warning" | "info";
 }
 
-export const SnackBarCustom = ({ message, severity ='success' }: ISnack) => {
+export const SnackBarCustom: React.FC<ISnack> = ({ message, severity ='success' }) => {
     const [open, setOpen] = useState(false)
 
     useEffect(()=> {
