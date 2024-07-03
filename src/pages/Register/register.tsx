@@ -50,10 +50,9 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
         e.preventDefault()
 
         try {
-            // const storedUsers = localStorage.getItem("users")
             const response = await fetch('/api/get?key=users');
             const users: IUser[] = response.ok ? await response.json() : []
-            // users.push(formData)
+
             const userExists = users.some(user => user.name === formData.name)
             if(userExists) {
                     SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
@@ -64,30 +63,34 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                 id: uuidV4(),
             }
             users.push(newUser)
-            // localStorage.setItem("users", JSON.stringify(users));
-            // console.log(formData)
-            await fetch('/api/save', {
+
+            const responseSave = await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json'},
                 body: JSON.stringify({ key: 'users', value: JSON.stringify(users) })
             });
 
-            SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
-            setFormData({
-                id: "",
-                name: "",
-                work: "",
-                votes: 0,
-                percent: 0,
-                anatomy: 0,
-                creativity: 0,
-                pigmentation: 0,
-                traces: 0,
-                readability: 0,
-                visualImpact: 0,
-                totalScore: 0
-            });
-            onRegister();
+            if(response.ok) {
+                
+                SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
+                setFormData({
+                    id: "",
+                    name: "",
+                    work: "",
+                    votes: 0,
+                    percent: 0,
+                    anatomy: 0,
+                    creativity: 0,
+                    pigmentation: 0,
+                    traces: 0,
+                    readability: 0,
+                    visualImpact: 0,
+                    totalScore: 0
+                });
+                onRegister();
+            } else {
+                SnackBarCustom({ message: "Erro ao salvar", severity: "error" });
+            }
         } catch (error) {
             // console.error("erro ao salvar ", error)
             SnackBarCustom({message: "Erro ao salvar", severity: "error"})
