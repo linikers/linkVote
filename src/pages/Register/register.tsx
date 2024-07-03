@@ -65,11 +65,11 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
             }
             users.push(newUser)
 
-            const responseSave = await fetch('/api/save', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json'},
-                body: JSON.stringify({ key: 'users', value: JSON.stringify(users) })
-            });
+            // const responseSave = await fetch('/api/save', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json'},
+            //     body: JSON.stringify({ key: 'users', value: JSON.stringify(users) })
+            // });
 
             if(response.ok) {
                 
