@@ -1,57 +1,123 @@
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
 import { FC, useEffect, useState } from "react";
 import { IUser } from "../Register";
+import { useFormik } from "formik";
+import * as yup from "yup";
+
+const schema = yup.object({
+    userName: yup.string().required("Campo obrigatório"),
+    anatomy: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    creativity: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    pigmentation: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    traces: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    readability: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+    visualImpact: yup
+        .number()
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
+        .required("Campo obrigatório"),
+
+})
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
     users: IUser[];
     setUsers: (users: IUser[]) => void;
 }
+
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
 
     const [, setTotalVotes] = useState(0);
     const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
+    
 
     useEffect(() => {
-        const storedUsers = localStorage.getItem("users");
-        if (storedUsers) {
-            const parsedUsers = JSON.parse(storedUsers);
-            const initializedUsers = parsedUsers.map((user: IUser) => ({
-                ...user,
-                votes: user.votes || 0,
-                anatomy: user.anatomy || 0,
-                creativity: user.creativity || 0,
-                pigmentation: user.pigmentation || 0,
-                traces: user.traces || 0,
-                readability: user.readability || 0,
-                visualImpact:  user.visualImpact || 0,
-                totalScore: user.totalScore || 0,
-            }));
-            setUsers(initializedUsers);
-        }
-    }, []);
+        const fetchData = async () => {
+            const response = await fetch('/api/get?key=votes');
+            if(response.ok) {
+                const data = await response.json();
+                setUsers(data)
+            }
+        };
+        fetchData()
+    }, [setUsers]);
 
-    const handleVote = (userName: string) => {
+    const handleVote = async (userName: string) => {
         const updatedUsers = users.map(user => {
             if(user.name === userName) {
-                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.traces + user.readability + user.visualImpact
+                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact
                 return {...user, votes:user.votes + 1, totalScore}
             }
             return user;
         });
         setUsers(updatedUsers);
-        localStorage.setItem("users", JSON.stringify(updatedUsers));
+        // localStorage.setItem("users", JSON.stringify(updatedUsers));
+        await fetch('/api/save', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ key: 'votes', value: updatedUsers })
+        })
         onOpenSnackBar(`Você votou em ${userName}`);
     };
-    const handleInputChange = (userName: string, field: keyof IUser, value: number) => {
-        const updatedUsers = users.map(user => {
-            if(user.name === userName) {
-                return {...user, [field]: value}
-            }
-            return user;
-        });
-        setUsers(updatedUsers)    
-    }
+
+    const formik = useFormik({
+        initialValues: {
+            name: '',
+            anatomy: 0,
+            creativity: 0,
+            pigmentation: 0,
+            traces: 0,
+            readability: 0,
+            visualImpact: 0,
+        },
+        validationSchema: schema,
+        onSubmit: async (values, {resetForm}) => {
+            const updatedUsers = users.map((user) => {
+                if(user.name === values.name) {
+                    return { ...user, ...values }
+                }
+                return user
+            });
+            setUsers(updatedUsers);
+            // localStorage.setItem("users", JSON.stringify(updatedUsers));
+            await fetch('/api/save', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: 'votes', value: updatedUsers }),
+            })
+            onOpenSnackBar(`Você votou em ${values.name}`);
+            resetForm();
+        }
+    })
+    // const handleInputChange = (userName: string, field: keyof IUser, value: number) => {
+    //     const updatedUsers = users.map(user => {
+    //         if(user.name === userName) {
+    //             return {...user, [field]: value}
+    //         }
+    //         return user;
+    //     });
+    //     setUsers(updatedUsers)    
+    // }
 
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
@@ -78,7 +144,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 <Typography variant="h4" gutterBottom style={{ marginBottom: "6rem" }}>Vote Agora</Typography>
             </Grid>
         
-            <form style={{ width: "100%" }}>
+            <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
                     {usersWithPercent.length > 0 ? (
                         usersWithPercent.map((user, index) => (
@@ -112,8 +178,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Anatomia"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.anatomy}
-                                    onChange={(e) => handleInputChange(user.name, "anatomy", Number(e.target.value))}
+                                    value={formik.values.anatomy}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.anatomy && Boolean(formik.errors.anatomy)}
+                                    helperText={formik.touched.anatomy && formik.errors.anatomy}
+                                    name="anatomy"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
@@ -121,8 +190,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Criatividade"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.creativity}
-                                    onChange={(e) => handleInputChange(user.name, "creativity", Number(e.target.value))}
+                                    value={formik.values.creativity}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.creativity && Boolean(formik.errors.creativity)}
+                                    helperText={formik.touched.creativity && formik.errors.creativity}
+                                    name="creativity"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
@@ -130,8 +202,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Pigmanetação"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.pigmentation}
-                                    onChange={(e) => handleInputChange(user.name, "pigmentation", Number(e.target.value))}
+                                    value={formik.values.pigmentation}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.pigmentation && Boolean(formik.errors.pigmentation)}
+                                    helperText={formik.touched.pigmentation && formik.errors.pigmentation}
+                                    name="pigmentation"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
@@ -139,8 +214,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Traços"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.traces}
-                                    onChange={(e) => handleInputChange(user.name, "traces", Number(e.target.value))}
+                                    value={formik.values.traces}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.traces && Boolean(formik.errors.traces)}
+                                    helperText={formik.touched.traces && formik.errors.traces}
+                                    name="traces"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
@@ -148,8 +226,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Legibilidade"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.readability}
-                                    onChange={(e) => handleInputChange(user.name, "readability", Number(e.target.value))}
+                                    value={formik.values.readability}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.readability && Boolean(formik.errors.readability)}
+                                    helperText={formik.touched.readability && formik.errors.readability}
+                                    name="readability"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
@@ -157,8 +238,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     label="Impacto Visual"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
-                                    value={user.visualImpact}
-                                    onChange={(e) => handleInputChange(user.name, "visualImpact", Number(e.target.value))}
+                                    value={formik.values.visualImpact}
+                                    onChange={formik.handleChange}
+                                    error={formik.touched.visualImpact && Boolean(formik.errors.visualImpact)}
+                                    helperText={formik.touched.visualImpact && formik.errors.visualImpact}
+                                    name="visualImpact"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />

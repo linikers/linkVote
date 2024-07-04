@@ -21,7 +21,7 @@ interface IRegisterProps {
     onRegister: () => void
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
-    console.log(uuidV4)
+
     const [formData, setFormData] = useState({
         id: "",
         name: "",
@@ -43,19 +43,20 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
         setFormData({ 
             ...formData, 
             [name]: value,
-            // [work]: value,
+
         })
     }
-    const handleRegister = (e: FormEvent) => {
+    const handleRegister = async (e: FormEvent) => {
         e.preventDefault()
 
         try {
-            const storedUsers = localStorage.getItem("users")
-            const users: IUser[] = storedUsers ? JSON.parse(storedUsers) : []
-            // users.push(formData)
+            // const response = await fetch('http://localhost:5000/api/get?key=users');
+            const response = await fetch('/api/get?key=users');
+            const users: IUser[] = response.ok ? await response.json() : []
+
             const userExists = users.some(user => user.name === formData.name)
             if(userExists) {
-                // SnackBarCustom(`Esse competidor já foi cadastrado ${userName}`)
+                    SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
                 return
             }
             const newUser = {
@@ -63,26 +64,30 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                 id: uuidV4(),
             }
             users.push(newUser)
-            localStorage.setItem("users", JSON.stringify(users));
-            // console.log(formData)
-            SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
-            setFormData({
-                id: "",
-                name: "",
-                work: "",
-                votes: 0,
-                percent: 0,
-                anatomy: 0,
-                creativity: 0,
-                pigmentation: 0,
-                traces: 0,
-                readability: 0,
-                visualImpact: 0,
-                totalScore: 0
-            });
-            onRegister();
+
+
+            if(response.ok) {
+                
+                SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
+                setFormData({
+                    id: "",
+                    name: "",
+                    work: "",
+                    votes: 0,
+                    percent: 0,
+                    anatomy: 0,
+                    creativity: 0,
+                    pigmentation: 0,
+                    traces: 0,
+                    readability: 0,
+                    visualImpact: 0,
+                    totalScore: 0
+                });
+                onRegister();
+            } else {
+                SnackBarCustom({ message: "Erro ao salvar", severity: "error" });
+            }
         } catch (error) {
-            // console.error("erro ao salvar ", error)
             SnackBarCustom({message: "Erro ao salvar", severity: "error"})
         }
     }
