@@ -1,6 +1,5 @@
 import { Button, FormControl, Grid, TextField } from "@mui/material";
 import React, { FC, FormEvent, useState } from "react";
-// import { SnackBarCustom } from "../../components/Snackbar";
 import { v4 as uuidV4 } from "uuid";
 
 export interface IUser {
