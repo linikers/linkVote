@@ -51,7 +51,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/listData');
+                const response = await fetch('/api/list');
                 if (response.ok) {
                     const data = await response.json();
                     setUsers(data.blobs); // Assumindo que os dados são retornados como { blobs: [...] }
