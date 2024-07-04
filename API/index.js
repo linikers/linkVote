@@ -17,7 +17,7 @@ app.use(cors())
 app.post('/api/save', async (request, response)=> {
     try {
         const { key, value } = request.body;
-        const blob = await put(`data/${key}.json`, Buffer.from(JSON.stringify(value)), {
+        const blob = await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(value)), {
             contentType: 'application/json',
             access: 'public',
             token: blobServiceClient.token
@@ -30,33 +30,17 @@ app.post('/api/save', async (request, response)=> {
 
 })
 
-// app.get('/api/get', async(request, response) => {
-//     try {
-        
-//         const { key } = request.query;
-//         const blob = await get(`data/${key}.json`, { token: blobServiceClient.token });
-//         if( blob) {
-//             response.json(blob.data);
-//         } else {
-//             response.status(500).json({ error: error.message })
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         response.status(500).json({ error: error.message});
-//     }
-// })
-
 app.get('/api/list', async (request, response) => {
     try {
       const { prefix = '' } = request.query; // Defina o prefixo padrão (opcional)
-      const blobs = await list({ prefix: prefix, token: blobServiceClient.token });
+      const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
       response.json({ blobs: blobs.blobs }); // Retorna a lista de blobs
     } catch (error) {
       console.error(error);
       response.status(500).json({ error: error.message });
     }
   });
-
+export default app;
 
 // No deploy do Vercel, a porta é definida pela plataforma
 // app.listen(5000, () => {

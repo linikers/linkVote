@@ -1,4 +1,4 @@
-import { Button, FormControl, Grid, TextField } from "@material-ui/core";
+import { Button, FormControl, Grid, TextField } from "@mui/material";
 import React, { FC, FormEvent, useState } from "react";
 // import { SnackBarCustom } from "../../components/Snackbar";
 import { v4 as uuidV4 } from "uuid";
@@ -54,13 +54,13 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
         e.preventDefault();
       
         try {
-          const response = await fetch('/api/save', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({ key: "users", value: formData }),
-          });
+            const response = await fetch('/api/save', {
+              method: 'POST',
+              headers: {
+                'Content-Type': 'application/json',
+              },
+              body: JSON.stringify({ key: 'users', value: formData }),
+            });
       
           if (!response.ok) {
             const error = await response.json();
