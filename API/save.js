@@ -1,4 +1,4 @@
-import { put, list } from '@vercel/blob';
+import { put, get } from '@vercel/blob';
 import dotenv from 'dotenv';
 
 dotenv.config();
@@ -11,21 +11,22 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     try {
       const { key, value } = req.body;
-      await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(value)), {
+      
+      // Fetch existing data
+      const existingBlob = await get(`competidores/${key}.json`, { token: blobServiceClient.token });
+      const existingData = existingBlob ? JSON.parse(await existingBlob.text()) : [];
+
+      // Merge existing data with new data
+      const updatedData = [...existingData, ...value];
+
+      // Save merged data
+      await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(updatedData)), {
         contentType: 'application/json',
         access: 'public',
         token: blobServiceClient.token,
       });
 
-      const blobs = await list({ prefix: 'competidores/', token: blobServiceClient.token });
-      const users = await Promise.all(
-        blobs.blobs.map(async (blob) => {
-          const response = await fetch(blob.url);
-          return response.json();
-        })
-      );
-
-      res.status(200).json(users.flat());
+      res.status(200).json(updatedData);
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, error: error.message });

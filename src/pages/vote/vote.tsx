@@ -50,7 +50,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('/api/list');
+            const response = await fetch('/api/get?key=votes');
             if(response.ok) {
                 const data = await response.json();
                 setUsers(data);
@@ -189,7 +189,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     fullWidth
                                 />
                                 <TextField 
-                                    label="Pigmentação"
+                                    label="Pigmanetação"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
                                     value={formik.values.pigmentation}
