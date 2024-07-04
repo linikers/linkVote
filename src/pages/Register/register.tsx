@@ -1,6 +1,6 @@
 import { Button, FormControl, Grid, TextField } from "@material-ui/core";
 import React, { FC, FormEvent, useState } from "react";
-import { SnackBarCustom } from "../../components/Snackbar";
+// import { SnackBarCustom } from "../../components/Snackbar";
 import { v4 as uuidV4 } from "uuid";
 
 export interface IUser {
@@ -24,9 +24,9 @@ interface IRegisterProps {
 
 export const Register: FC<IRegisterProps> = ({ onRegister }) => {
     
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [snackbarMessage, setSnackbarMessage] = useState("");
-    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("success");
+    const [, setSnackbarOpen] = useState(false);
+    const [ , setSnackbarMessage] = useState("");
+    const [ , setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("success");
     const [formData, setFormData] = useState({
         id: "",
         name: "",
