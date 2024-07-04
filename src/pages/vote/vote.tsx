@@ -50,10 +50,14 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('/api/getData');
-            if(response.ok) {
-                const data = await response.json();
-                setUsers(data);
+            try {
+                const response = await fetch('/api/listData');
+                if (response.ok) {
+                    const data = await response.json();
+                    setUsers(data.blobs); // Assumindo que os dados são retornados como { blobs: [...] }
+                }
+            } catch (error) {
+                console.error("Erro ao buscar dados:", error);
             }
         };
         fetchData();
