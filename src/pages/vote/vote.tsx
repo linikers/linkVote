@@ -5,7 +5,7 @@ import { useFormik } from "formik";
 import * as yup from "yup";
 
 const schema = yup.object({
-    userName: yup.string().required("Campo obrigatório"),
+    name: yup.string().required("Campo obrigatório"),
     anatomy: yup
         .number()
         .min(0, "nota mínima é 0")
@@ -36,8 +36,7 @@ const schema = yup.object({
         .min(0, "nota mínima é 0")
         .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
-
-})
+});
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
@@ -46,27 +45,25 @@ interface VoteProps {
 }
 
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
-
     const [, setTotalVotes] = useState(0);
     const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
     
-
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('/api/get?key=votes');
+            const response = await fetch('/api/list');
             if(response.ok) {
                 const data = await response.json();
-                setUsers(data)
+                setUsers(data);
             }
         };
-        fetchData()
+        fetchData();
     }, [setUsers]);
 
     const handleVote = async (userName: string) => {
         const updatedUsers = users.map(user => {
             if(user.name === userName) {
-                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact
-                return {...user, votes:user.votes + 1, totalScore}
+                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact;
+                return {...user, votes: user.votes + 1, totalScore };
             }
             return user;
         });
@@ -75,8 +72,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         await fetch('/api/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key: 'votes', value: updatedUsers })
-        })
+            body: JSON.stringify({ key: 'votes', value: updatedUsers }),
+        });
+
         onOpenSnackBar(`Você votou em ${userName}`);
     };
 
@@ -94,21 +92,22 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         onSubmit: async (values, {resetForm}) => {
             const updatedUsers = users.map((user) => {
                 if(user.name === values.name) {
-                    return { ...user, ...values }
+                    return { ...user, ...values };
                 }
-                return user
+                return user;
             });
             setUsers(updatedUsers);
-            // localStorage.setItem("users", JSON.stringify(updatedUsers));
+
             await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: 'votes', value: updatedUsers }),
-            })
+            });
+
             onOpenSnackBar(`Você votou em ${values.name}`);
             resetForm();
-        }
-    })
+        },
+    });
 
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
@@ -190,7 +189,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     fullWidth
                                 />
                                 <TextField 
-                                    label="Pigmanetação"
+                                    label="Pigmentação"
                                     type="number"
                                     inputProps={{min:0, max: 10}}
                                     value={formik.values.pigmentation}
