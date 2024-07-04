@@ -8,33 +8,33 @@ const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
     anatomy: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
     creativity: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
     pigmentation: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
     traces: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
     readability: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
     visualImpact: yup
         .number()
-        .min(0, "nota mínima é 0")
-        .max(10, " Nota máxima é 10")
+        .min(0, "Nota mínima é 0")
+        .max(10, "Nota máxima é 10")
         .required("Campo obrigatório"),
 });
 
@@ -50,7 +50,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
     useEffect(() => {
         const fetchData = async () => {
-            const response = await fetch('/api/get?key=votes');
+            const response = await fetch('/api/getData');
             if(response.ok) {
                 const data = await response.json();
                 setUsers(data);
@@ -69,7 +69,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         });
         setUsers(updatedUsers);
         
-        await fetch('/api/save', {
+        await fetch('/api/saveData', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key: 'votes', value: updatedUsers }),
@@ -98,7 +98,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             });
             setUsers(updatedUsers);
 
-            await fetch('/api/save', {
+            await fetch('/api/saveData', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: 'votes', value: updatedUsers }),

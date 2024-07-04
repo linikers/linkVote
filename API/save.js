@@ -1,32 +1,16 @@
-import { put, get } from '@vercel/blob';
-import dotenv from 'dotenv';
-
-dotenv.config();
-
-const blobServiceClient = {
-  token: process.env.BLOB_READ_WRITE_TOKEN,
-};
+import { Blob } from '@vercel/blob';
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
+  if (req.method === 'GET') {
     try {
-      const { key, value } = req.body;
-      
-      // Fetch existing data
-      const existingBlob = await get(`competidores/${key}.json`, { token: blobServiceClient.token });
-      const existingData = existingBlob ? JSON.parse(await existingBlob.text()) : [];
+      const blob = new Blob(process.env.BLOB_READ_WRITE_TOKEN);
+      const data = await blob.get('competidores/votes.json');
 
-      // Merge existing data with new data
-      const updatedData = [...existingData, ...value];
-
-      // Save merged data
-      await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(updatedData)), {
-        contentType: 'application/json',
-        access: 'public',
-        token: blobServiceClient.token,
-      });
-
-      res.status(200).json(updatedData);
+      if (data) {
+        res.status(200).json(JSON.parse(data.toString()));
+      } else {
+        res.status(404).json({ success: false, error: 'Data not found' });
+      }
     } catch (error) {
       console.error(error);
       res.status(500).json({ success: false, error: error.message });
