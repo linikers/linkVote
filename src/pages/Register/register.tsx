@@ -74,7 +74,7 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                 body: JSON.stringify({ key: "users", value: users})
             });
                 
-                setSnackbar({message: "Registrado com sucesso!", severity: "success"});
+                SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
                 setFormData({
                     id: "",
                     name: "",
@@ -91,7 +91,7 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                 });
                 onRegister();
 
-                // SnackBarCustom({ message: "Erro ao salvar", severity: "error" });
+                setSnackbar({ message: "Competidor Cadastrado", severity: "error" });
       
         } catch (error) {
             setSnackbar({message: "Erro ao salvar", severity: "error"});

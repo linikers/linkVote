@@ -109,15 +109,6 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             resetForm();
         }
     })
-    // const handleInputChange = (userName: string, field: keyof IUser, value: number) => {
-    //     const updatedUsers = users.map(user => {
-    //         if(user.name === userName) {
-    //             return {...user, [field]: value}
-    //         }
-    //         return user;
-    //     });
-    //     setUsers(updatedUsers)    
-    // }
 
     useEffect(() => {
         const total = users.reduce((total, user) => total + user.votes, 0);
