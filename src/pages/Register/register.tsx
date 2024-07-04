@@ -17,12 +17,16 @@ export interface IUser {
     visualImpact: number;
     totalScore: number;
 }
-interface IRegisterProps {
-    onRegister: () => void
-}
-export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
-    const [snackbar, setSnackbar] = useState({ message: "", severity: "" });
+interface IRegisterProps {
+    onRegister: () => void;
+}
+
+export const Register: FC<IRegisterProps> = ({ onRegister }) => {
+    
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState("");
+    const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("success");
     const [formData, setFormData] = useState({
         id: "",
         name: "",
@@ -36,83 +40,87 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
         readability: 0,
         visualImpact: 0,
         totalScore: 0,
-    })
-
+    });
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name,  value } = e.target;
-        setFormData({ 
-            ...formData, 
+        const { name, value } = e.target;
+        setFormData({
+            ...formData,
             [name]: value,
+        });
+    };
 
-        })
-    }
     const handleRegister = async (e: FormEvent) => {
-        e.preventDefault()
-
+        e.preventDefault();
+      
         try {
-            // const response = await fetch('http://localhost:5000/api/get?key=users');
-            const response = await fetch('/api/get?key=users');
-            const users: IUser[] = response.ok ? await response.json() : []
-
-            const userExists = users.some(user => user.name === formData.name)
-            if(userExists) {
-                    // SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
-                    setSnackbar({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"});
-                return
-            }
-            const newUser = {
-                ...formData,
-                id: uuidV4(),
-            }
-            users.push(newUser);
-            await  fetch ('/api/save', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({ key: "users", value: users})
-            });
-                
-                SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
-                setFormData({
-                    id: "",
-                    name: "",
-                    work: "",
-                    votes: 0,
-                    percent: 0,
-                    anatomy: 0,
-                    creativity: 0,
-                    pigmentation: 0,
-                    traces: 0,
-                    readability: 0,
-                    visualImpact: 0,
-                    totalScore: 0
-                });
-                onRegister();
-
-                setSnackbar({ message: "Competidor Cadastrado", severity: "error" });
+          const response = await fetch('/api/save', {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ key: "users", value: formData }),
+          });
+      
+          if (!response.ok) {
+            const error = await response.json();
+            setSnackbarMessage(`Erro ao salvar: ${error.message}`);
+            setSnackbarSeverity("error");
+            setSnackbarOpen(true);
+            return; 
+          }
+      
+          const savedUsers: IUser[] = await response.json(); 
+      
+          const userExists = savedUsers.some((user) => user.name === formData.name);
+          if (userExists) {
+            setSnackbarMessage(`Esse competidor já foi cadastrado ${formData.name}`);
+            setSnackbarSeverity("warning");
+            setSnackbarOpen(true);
+            return;
+          }
+      
+          const newUser = {
+            ...formData,
+            id: uuidV4(),
+          };
+      
+          setFormData((prevState) => ({
+            ...prevState,
+            users: [...savedUsers, newUser]
+        }));
+      
+          setSnackbarMessage("Registrado com sucesso!");
+          setSnackbarSeverity("success");
+          setSnackbarOpen(true);
+          onRegister(); 
       
         } catch (error) {
-            setSnackbar({message: "Erro ao salvar", severity: "error"});
+          setSnackbarMessage("Erro ao salvar");
+          setSnackbarSeverity("error");
+          setSnackbarOpen(true);
         }
-    }
-    return (
-    <form onSubmit={handleRegister}>
-        <Grid container spacing={2}  >
-            <FormControl fullWidth>
+      };
+      
 
-            <Grid item xs={12} style={{ margin: "1rem" }}>
-                <TextField label="Nome" name="name" value={formData.name} color="secondary" onChange={handleInputChange}  fullWidth/>
+    return (
+        <form onSubmit={handleRegister}>
+            <Grid container spacing={2}>
+                <FormControl fullWidth>
+                    <Grid item xs={12} style={{ margin: "1rem" }}>
+                        <TextField label="Nome" name="name" value={formData.name} color="secondary" onChange={handleInputChange} fullWidth />
+                    </Grid>
+                    <Grid item xs={12} style={{ margin: "1rem" }}>
+                        <TextField label="Estudio" name="work" value={formData.work} onChange={handleInputChange} />
+                    </Grid>
+                    <Grid item style={{ margin: "2rem" }}>
+                        <Button variant="contained" color="primary" type="submit">
+                            Salvar
+                        </Button>
+                    </Grid>
+                </FormControl>
             </Grid>
-            <Grid item xs={12} style={{ margin: "1rem" }}>
-                <TextField label="Estudio" name="work" value={formData.work} onChange={handleInputChange}/>
-            </Grid>
-            <Grid item style={{margin: "2rem"}}>
-                <Button variant="contained" color="primary" type="submit">Salvar</Button>
-            </Grid>
-            </FormControl>
-        </Grid>
-    </form>
-    )
-}
+            {/* <SnackBarCustom message={snackbar.message} severity={snackbar.severity} /> */}
+        </form>
+    );
+};

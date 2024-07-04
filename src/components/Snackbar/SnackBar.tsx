@@ -1,4 +1,4 @@
-import { Alert, Snackbar } from "@mui/material"
+import { Alert, Snackbar } from "@mui/material";
 import React, { useEffect, useState } from "react";
 
 interface ISnack {
@@ -6,23 +6,24 @@ interface ISnack {
     severity: "success" | "error" | "warning" | "info";
 }
 
-export const SnackBarCustom: React.FC<ISnack> = ({ message, severity ='success' }) => {
-    const [open, setOpen] = useState(false)
+export const SnackBarCustom: React.FC<ISnack> = ({ message, severity }) => {
+    const [open, setOpen] = useState(false);
 
-    useEffect(()=> {
-        if(message) {
-            setOpen(true)
+    useEffect(() => {
+        if (message) {
+            setOpen(true);
         }
-    },[message])
+    }, [message]);
 
     const handleClose = () => {
-        setOpen(false)
-    }
+        setOpen(false);
+    };
+
     return (
-        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}> 
-            <Alert onClose={handleClose} severity={severity} sx={{ width: "100%"}}>
+        <Snackbar open={open} autoHideDuration={3000} onClose={handleClose}>
+            <Alert onClose={handleClose} severity={severity} sx={{ width: "100%" }}>
                 {message}
             </Alert>
         </Snackbar>
-    )
-}
+    );
+};

@@ -71,7 +71,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             return user;
         });
         setUsers(updatedUsers);
-        // localStorage.setItem("users", JSON.stringify(updatedUsers));
+        
         await fetch('/api/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
