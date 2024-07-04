@@ -4,12 +4,13 @@ import dotenv from "dotenv";
 import cors from "cors"
 
 dotenv.config()
+console.log('BLOB_READ_WRITE_TOKEN:', process.env.BLOB_READ_WRITE_TOKEN);
 const app = express();
 
 const blobServiceClient = {
     token: process.env.BLOB_READ_WRITE_TOKEN,
 };
-
+console.log(process.env.BLOB_READ_WRITE_TOKEN)
 app.use(express.json());
 app.use(cors())
 

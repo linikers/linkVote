@@ -22,6 +22,7 @@ interface IRegisterProps {
 }
 export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
+    const [snackbar, setSnackbar] = useState({ message: "", severity: "" });
     const [formData, setFormData] = useState({
         id: "",
         name: "",
@@ -56,19 +57,24 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
 
             const userExists = users.some(user => user.name === formData.name)
             if(userExists) {
-                    SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
+                    // SnackBarCustom({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"})
+                    setSnackbar({message: `Esse competidor já foi cadastrado ${formData.name}`, severity: "warning"});
                 return
             }
             const newUser = {
                 ...formData,
                 id: uuidV4(),
             }
-            users.push(newUser)
-
-
-            if(response.ok) {
+            users.push(newUser);
+            await  fetch ('/api/save', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ key: "users", value: users})
+            });
                 
-                SnackBarCustom({message: "Registrado com sucesso!", severity: "success"});
+                setSnackbar({message: "Registrado com sucesso!", severity: "success"});
                 setFormData({
                     id: "",
                     name: "",
@@ -84,11 +90,11 @@ export const Register: FC<IRegisterProps> = ({onRegister}) => {
                     totalScore: 0
                 });
                 onRegister();
-            } else {
-                SnackBarCustom({ message: "Erro ao salvar", severity: "error" });
-            }
+
+                // SnackBarCustom({ message: "Erro ao salvar", severity: "error" });
+      
         } catch (error) {
-            SnackBarCustom({message: "Erro ao salvar", severity: "error"})
+            setSnackbar({message: "Erro ao salvar", severity: "error"});
         }
     }
     return (
