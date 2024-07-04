@@ -59,6 +59,6 @@ app.get('/api/list', async (request, response) => {
 
 
 // No deploy do Vercel, a porta é definida pela plataforma
-app.listen(5000, () => {
-    console.log("Server rocket running on port 5000")
-})
+// app.listen(5000, () => {
+//     console.log("Server rocket running on port 5000")
+// })
