@@ -50,37 +50,38 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
 
-    useEffect(() => {
-        async function fetchData() {
-            try {
-                const response = await fetch('/api/list');
-                if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
-                }
-                const data = await response.json();
-                
-                const parsedData: IUser[] = data.blobs.map((blob: any) => {
-                    const parsedBlob = JSON.parse(blob.content);
-                    return {
-                        name: parsedBlob.name,
-                        work: parsedBlob.work,
-                        anatomy: parsedBlob.anatomy,
-                        creativity: parsedBlob.creativity,
-                        pigmentation: parsedBlob.pigmentation,
-                        traces: parsedBlob.traces,
-                        readability: parsedBlob.readability,
-                        visualImpact: parsedBlob.visualImpact,
-                        votes: parsedBlob.votes || 0,
-                    };
-                });
-                setDataBlobs(parsedData);
-            } catch (error) {
-                console.error("Failed to fetch data: ", error);
-                
+    const fetchData = async () => {
+        try {
+            const response = await fetch('/api/list');
+            if (!response.ok) {
+                throw new Error(`Error ${response.status}: ${response.statusText}`);
             }
+            const data = await response.json();
+    
+            // Mapear os blobs para o formato desejado
+            const parsedData: IUser[] = data.blobs.map((blob: any) => {
+                if (blob.pathname.startsWith('competidores/users-')) {
+                    // Extrair os dados do JSON contido em cada URL
+                    return fetch(blob.url)
+                        .then(res => res.json())
+                        .catch(err => {
+                            console.error(`Erro ao buscar dados do blob: ${err}`);
+                            return null;
+                        });
+                }
+                return null;
+            });
+    
+            // Filtrar dados válidos (remover nulos)
+            const filteredData: IUser[] = (await Promise.all(parsedData))
+                .filter((user: IUser | null) => user !== null);
+    
+            setDataBlobs(filteredData);
+        } catch (error) {
+            console.error("Falha ao buscar dados:", error);
         }
-        fetchData();
-    }, []);
+    };
+    
 
     const handleVote = async (userName: string) => {
         const updatedUsers = users.map(user => {
