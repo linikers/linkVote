@@ -48,7 +48,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     const [, setTotalVotes] = useState(0);
     const [ , setUsersWithPercent] = useState<IUser[]>([]);
     
-    const [dataBlobs, setDataBlobs] = useState([]);
+    const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
     useEffect(() => {
         async function fetchData() {
             try {
@@ -243,14 +243,14 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    // onClick={() => handleVote(user.name)}
+                                    onClick={() => handleVote(user.name)}
                                     style={{ marginTop: "0.5rem", backgroundColor: "#adb5bd", width: "6rem" }}
                                 >
                                     Votar
                                 </Button>
                                 <LinearProgress
                                     variant="determinate"
-                                    // value={user.percent}
+                                    value={user.percent}
                                     sx={{ 
                                         backgroundColor: "#414141",
                                         marginTop: "0.5rem", 
@@ -262,7 +262,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {/* {user.votes} votos ({user.percent?.toFixed()} %) */}
+                                    {user.votes} votos ({user.percent?.toFixed()} %)
                                 </Typography>
                             </Grid>
                         ))
