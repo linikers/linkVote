@@ -58,7 +58,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
                 const data = await response.json();
-    
+                console.log(data); // Verifica os dados recebidos do endpoint /api/list
+                
                 // Filtrar e mapear os blobs relevantes
                 const filteredBlobs = data.blobs.filter((blob: any) => blob.pathname.startsWith('competidores/users-'));
     
@@ -88,6 +89,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
         fetchData();
     }, []);
+    
     
     
 
