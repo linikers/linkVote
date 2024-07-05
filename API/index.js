@@ -14,7 +14,7 @@ const blobServiceClient = {
 app.use(express.json());
 app.use(cors())
 
-app.post('/api/index', async (request, response)=> {
+app.post('/api/save', async (request, response)=> {
     try {
         const { key, value } = request.body;
         const blob = await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(value)), {
@@ -30,7 +30,7 @@ app.post('/api/index', async (request, response)=> {
 
 })
 
-app.get('/api/index', async (request, response) => {
+app.get('/api/list', async (request, response) => {
     try {
       const { prefix = '' } = request.query; // Defina o prefixo padrão (opcional)
       const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
