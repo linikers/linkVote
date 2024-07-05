@@ -50,37 +50,45 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
 
-    const fetchData = async () => {
-        try {
-            const response = await fetch('/api/list');
-            if (!response.ok) {
-                throw new Error(`Error ${response.status}: ${response.statusText}`);
-            }
-            const data = await response.json();
-    
-            // Mapear os blobs para o formato desejado
-            const parsedData: IUser[] = data.blobs.map((blob: any) => {
-                if (blob.pathname.startsWith('competidores/users-')) {
-                    // Extrair os dados do JSON contido em cada URL
-                    return fetch(blob.url)
-                        .then(res => res.json())
-                        .catch(err => {
-                            console.error(`Erro ao buscar dados do blob: ${err}`);
-                            return null;
-                        });
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch('/api/list');
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
-                return null;
-            });
+                const data = await response.json();
     
-            // Filtrar dados válidos (remover nulos)
-            const filteredData: IUser[] = (await Promise.all(parsedData))
-                .filter((user: IUser | null) => user !== null);
+                // Filtrar e mapear os blobs relevantes
+                const filteredBlobs = data.blobs.filter((blob: any) => blob.pathname.startsWith('competidores/users-'));
     
-            setDataBlobs(filteredData);
-        } catch (error) {
-            console.error("Falha ao buscar dados:", error);
-        }
-    };
+                // Mapear os dados dos blobs para buscar cada usuário
+                const fetchedUsers = await Promise.all(filteredBlobs.map(async (blob: any) => {
+                    try {
+                        const userDataResponse = await fetch(blob.url);
+                        if (!userDataResponse.ok) {
+                            throw new Error(`Error ${userDataResponse.status}: ${userDataResponse.statusText}`);
+                        }
+                        const userData = await userDataResponse.json();
+                        return userData; // Retorna os dados do usuário
+                    } catch (err) {
+                        console.error(`Erro ao buscar dados do blob ${blob.url}: ${err}`);
+                        return null; // Retorna null se houver erro
+                    }
+                }));
+    
+                // Filtrar dados válidos (remover nulos)
+                const filteredData: IUser[] = fetchedUsers.filter((user: IUser | null) => user !== null);
+    
+                setDataBlobs(filteredData);
+            } catch (error) {
+                console.error("Falha ao buscar dados:", error);
+            }
+        };
+    
+        fetchData();
+    }, []);
+    
     
 
     const handleVote = async (userName: string) => {
