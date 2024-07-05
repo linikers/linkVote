@@ -58,7 +58,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 
                 const parsedData: IUser[] = data.blobs.map((blob: any) => {
                     const parsedBlob = JSON.parse(blob.content);
-                    return {
+                    return [{
                         name: parsedBlob.name,
                         work: parsedBlob.work,
                         anatomy: parsedBlob.anatomy,
@@ -68,7 +68,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                         readability: parsedBlob.readability,
                         visualImpact: parsedBlob.visualImpact,
                         votes: parsedBlob.votes || 0,
-                    };
+                    }];
                 });
                 setDataBlobs(parsedData);
             } catch (error) {
