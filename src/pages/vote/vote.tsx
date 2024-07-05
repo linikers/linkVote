@@ -53,7 +53,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     useEffect(() => {
         async function fetchData() {
             try {
-                const response = await fetch('/api/competidores');
+                const response = await fetch('/api/list');
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
