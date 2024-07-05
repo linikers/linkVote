@@ -53,9 +53,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/list/');
+                const response = await fetch('/api/list');
                 if (!response.ok) {
-                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                    throw new Error(`Erro na resposta da api ${response.status}: ${response.statusText}`);
                 }
                 const data = await response.json();
                 console.log(data); // Verifica os dados recebidos do endpoint /api/list
@@ -85,7 +85,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 setDataBlobs(filteredData);
                 // setDataBlobs(userData)
             } catch (error) {
-                console.error("Falha ao buscar dados:", error);
+                console.error("Falha ao buscar dados iniciais", error);
             }
         };
     
