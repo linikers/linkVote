@@ -54,6 +54,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         async function fetchData() {
             try {
                 const response = await fetch('/api/competidores');
+                if (!response.ok) {
+                    throw new Error(`Error ${response.status}: ${response.statusText}`);
+                }
                 const data = await response.json();
                 
                 const parsedData: IUser[] = data.blobs.map((blob: any) => {
@@ -73,6 +76,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 setDataBlobs(parsedData);
             } catch (error) {
                 console.error("Failed to fetch data: ", error);
+                
             }
         }
         fetchData();
