@@ -49,12 +49,28 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     const [ , setUsersWithPercent] = useState<IUser[]>([]);
     
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
+
     useEffect(() => {
         async function fetchData() {
             try {
                 const response = await fetch('/api/competidores');
                 const data = await response.json();
-                setDataBlobs(data.blobs.map((blob: any) => JSON.parse(blob.content)));
+                
+                const parsedData: IUser[] = data.blobs.map((blob: any) => {
+                    const parsedBlob = JSON.parse(blob.content);
+                    return {
+                        name: parsedBlob.name,
+                        work: parsedBlob.work,
+                        anatomy: parsedBlob.anatomy,
+                        creativity: parsedBlob.creativity,
+                        pigmentation: parsedBlob.pigmentation,
+                        traces: parsedBlob.traces,
+                        readability: parsedBlob.readability,
+                        visualImpact: parsedBlob.visualImpact,
+                        votes: parsedBlob.votes || 0,
+                    };
+                });
+                setDataBlobs(parsedData);
             } catch (error) {
                 console.error("Failed to fetch data: ", error);
             }
