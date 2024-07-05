@@ -8,33 +8,33 @@ const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
     anatomy: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
     creativity: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
     pigmentation: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
     traces: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
     readability: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
     visualImpact: yup
         .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
+        .min(0, "nota mínima é 0")
+        .max(10, " Nota máxima é 10")
         .required("Campo obrigatório"),
 });
 
@@ -46,22 +46,21 @@ interface VoteProps {
 
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     const [, setTotalVotes] = useState(0);
-    const [usersWithPercent, setUsersWithPercent] = useState<IUser[]>([]);
+    const [ , setUsersWithPercent] = useState<IUser[]>([]);
     
+    const [dataBlobs, setDataBlobs] = useState([]);
     useEffect(() => {
-        const fetchData = async () => {
+        async function fetchData() {
             try {
-                const response = await fetch('/api/list');
-                if (response.ok) {
-                    const data = await response.json();
-                    setUsers(data.blobs); // Assumindo que os dados são retornados como { blobs: [...] }
-                }
+                const response = await fetch('/api/competidores');
+                const data = await response.json();
+                setDataBlobs(data.blobs.map((blob: any) => JSON.parse(blob.content)));
             } catch (error) {
-                console.error("Erro ao buscar dados:", error);
+                console.error("Failed to fetch data: ", error);
             }
-        };
+        }
         fetchData();
-    }, [setUsers]);
+    }, []);
 
     const handleVote = async (userName: string) => {
         const updatedUsers = users.map(user => {
@@ -73,7 +72,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         });
         setUsers(updatedUsers);
         
-        await fetch('/api/saveData', {
+        await fetch('/api/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ key: 'votes', value: updatedUsers }),
@@ -102,7 +101,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             });
             setUsers(updatedUsers);
 
-            await fetch('/api/saveData', {
+            await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ key: 'votes', value: updatedUsers }),
@@ -140,8 +139,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {usersWithPercent.length > 0 ? (
-                        usersWithPercent.map((user, index) => (
+                    {dataBlobs.length > 0 ? (
+                        dataBlobs.map((user, index) => (
                             <Grid
                                 key={index}
                                 xs={12} item
@@ -164,9 +163,10 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                 <Typography 
                                     style={{ fontWeight: "bold" }}
                                 >
-                                {user.name}
+                                {/* {console.log(user)} */}
+                                {user}
                                 </Typography>
-                                <Typography style={{ color: "#757575"}}>{user.work}</Typography>
+                                {/* <Typography style={{ color: "#757575"}}>{user.work}</Typography> */}
                                 
                                 <TextField 
                                     label="Anatomia"
@@ -243,14 +243,14 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleVote(user.name)}
+                                    // onClick={() => handleVote(user.name)}
                                     style={{ marginTop: "0.5rem", backgroundColor: "#adb5bd", width: "6rem" }}
                                 >
                                     Votar
                                 </Button>
                                 <LinearProgress
                                     variant="determinate"
-                                    value={user.percent}
+                                    // value={user.percent}
                                     sx={{ 
                                         backgroundColor: "#414141",
                                         marginTop: "0.5rem", 
@@ -262,7 +262,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {user.votes} votos ({user.percent?.toFixed()} %)
+                                    {/* {user.votes} votos ({user.percent?.toFixed()} %) */}
                                 </Typography>
                             </Grid>
                         ))
