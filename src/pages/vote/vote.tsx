@@ -53,7 +53,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const response = await fetch('/api/list');
+                const response = await fetch('/api/list/');
                 if (!response.ok) {
                     throw new Error(`Error ${response.status}: ${response.statusText}`);
                 }
@@ -71,6 +71,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                             throw new Error(`Error ${userDataResponse.status}: ${userDataResponse.statusText}`);
                         }
                         const userData = await userDataResponse.json();
+                        console.log(userData);
                         return userData; // Retorna os dados do usuário
                     } catch (err) {
                         console.error(`Erro ao buscar dados do blob ${blob.url}: ${err}`);
@@ -82,6 +83,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 const filteredData: IUser[] = fetchedUsers.filter((user: IUser | null) => user !== null);
     
                 setDataBlobs(filteredData);
+                // setDataBlobs(userData)
             } catch (error) {
                 console.error("Falha ao buscar dados:", error);
             }
