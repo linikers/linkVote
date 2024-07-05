@@ -164,9 +164,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                                     style={{ fontWeight: "bold" }}
                                 >
                                 {/* {console.log(user)} */}
-                                {user}
+                                {user.name}
                                 </Typography>
-                                {/* <Typography style={{ color: "#757575"}}>{user.work}</Typography> */}
+                                <Typography style={{ color: "#757575"}}>{user.work}</Typography>
                                 
                                 <TextField 
                                     label="Anatomia"
