@@ -96,23 +96,35 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     
 
     const handleVote = async (userName: string) => {
+        const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
+    
+        if (votedUsers.includes(userName)) {
+            onOpenSnackBar(`Você já votou em ${userName}`);
+            return;
+        }
+    
         const updatedUsers = users.map(user => {
-            if(user.name === userName) {
+            if (user.name === userName) {
                 const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact;
-                return {...user, votes: user.votes + 1, totalScore };
+                return { ...user, votes: user.votes + 1, totalScore };
             }
             return user;
         });
+    
         setUsers(updatedUsers);
         
         await fetch('/api/save', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key: 'votes', value: updatedUsers }),
+            body: JSON.stringify({ key: `competidores/users-${userName}.json`, value: updatedUsers.find(user => user.name === userName) }),
         });
-
+    
+        localStorage.setItem('votedUsers', JSON.stringify([...votedUsers, userName]));
+    
         onOpenSnackBar(`Você votou em ${userName}`);
     };
+    
+    
 
     const formik = useFormik({
         initialValues: {

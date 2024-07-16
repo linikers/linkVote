@@ -8,20 +8,25 @@ const blobServiceClient = {
 };
 
 export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    try {
-      const { key, value } = req.body;
-      const blob = await put(`competidores/${key}.json`, Buffer.from(JSON.stringify(value)), {
-        contentType: 'application/json',
-        access: 'public',
-        token: blobServiceClient.token,
-      });
-      res.status(200).json({ success: true, blob });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, error: error.message });
-    }
-  } else {
-    res.status(405).json({ success: false, error: 'Method Not Allowed' });
+  if (req.method !== 'POST') {
+      res.status(405).json({ message: 'Method not allowed' });
+      return;
   }
+
+  const { key, value } = req.body;
+  const response = await fetch(`https://api.vercel.com/v8/blobs/${key}`, {
+      method: 'POST',
+      headers: {
+          'Authorization': `Bearer ${process.env.VERCEL_ACCESS_TOKEN}`,
+          'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(value)
+  });
+
+  if (!response.ok) {
+      res.status(response.status).json({ message: response.statusText });
+      return;
+  }
+
+  res.status(200).json({ message: 'Data saved successfully' });
 }
