@@ -11,6 +11,10 @@ export default async function handler(req, res) {
   try {
     const { prefix = 'competidores/' } = req.query;
 
+    if (!blobServiceClient.token) {
+      throw new Error('Token de acesso não configurado corretamente.');
+    }
+
     const blobs = await list({ 
       prefix, 
       token: blobServiceClient.token 
@@ -26,7 +30,7 @@ export default async function handler(req, res) {
 
     res.status(200).json(blobContents);
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: error.message });
+    console.error('Erro ao listar blobs:', error);
+    res.status(500).json({ error: 'Erro interno ao processar a requisição.' });
   }
 }
