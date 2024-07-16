@@ -10,7 +10,7 @@ const blobServiceClient = {
 
 router.get('/', async (req, res) => {
   try {
-    const { prefix = 'competidores/' } = req.query; // Prefixo correto aqui?
+    const { prefix = 'competidores/users' } = req.query; // Prefixo correto aqui?
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
