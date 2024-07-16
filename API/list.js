@@ -1,6 +1,6 @@
-import { BlobServiceClient } from "@azure/storage-blob";
-// import { list } from '@vercel/blob';
+import { list, get } from '@vercel/blob';
 import dotenv from 'dotenv';
+import { PutBlobResult } from "@vercel/blob";
 
 dotenv.config();
 
@@ -9,18 +9,21 @@ const blobServiceClient = {
 };
 
 export default async function handler(req, res) {
-  const response = await fetch('https://api.vercel.com/v8/blobs', {
-      headers: {
-          Authorization: `Bearer ${process.env.VERCEL_ACCESS_TOKEN}`
-      }
-  });
+  try {
+    const { prefix = '' } = req.query;
 
-  if (!response.ok) {
-      res.status(response.status).json({ message: response.statusText });
-      return;
+    const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
+
+    const blobContents = blobs.keys.map(async (key) => {
+      const blob = await get({ key, token: blobServiceClient.token });
+      const content = await blob.text();
+      return { key, content };
+    });
+
+    const dataWithContent = await Promise.all(blobContents);
+    res.status(200).json({ blobs: dataWithContent });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: error.message });
   }
-
-  const data = await response.json();
-  const blobs = data.blobs.filter(blob => blob.pathname.startsWith('competidores/users-'));
-  res.status(200).json({ blobs });
 }

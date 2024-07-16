@@ -32,9 +32,9 @@ app.post('/api/save', async (request, response)=> {
 
 app.get('/api/list', async (request, response) => {
     try {
-      const { prefix = '' } = request.query; // Defina o prefixo padrão (opcional)
+      const { prefix = '' } = request.query; 
       const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
-      response.json({ blobs: blobs.blobs }); // Retorna a lista de blobs
+      response.json({ blobs: blobs.blobs }); 
     } catch (error) {
       console.error(error);
       response.status(500).json({ error: error.message });

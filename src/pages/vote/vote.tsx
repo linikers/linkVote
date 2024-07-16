@@ -4,6 +4,7 @@ import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
 
+
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
     anatomy: yup
@@ -51,43 +52,31 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
 
     useEffect(() => {
+        
         const fetchData = async () => {
+            const timeout = 5000; 
+            const controller = new AbortController();
+            const signal = controller.signal;
+          
+            const timer = setTimeout(() => {
+              controller.abort();
+              console.error('Solicitação expirada');
+            }, timeout);
+          
             try {
-                const response = await fetch('/api/list');
-                if (!response.ok) {
-                    throw new Error(`Erro na resposta da api ${response.status}: ${response.statusText}`);
-                }
-                const data = await response.json();
-                console.log(data); // Verifica os dados recebidos do endpoint /api/list
-                
-                // Filtrar e mapear os blobs relevantes
-                const filteredBlobs = data.blobs.filter((blob: any) => blob.pathname.startsWith('competidores/users-'));
-    
-                // Mapear os dados dos blobs para buscar cada usuário
-                const fetchedUsers = await Promise.all(filteredBlobs.map(async (blob: any) => {
-                    try {
-                        const userDataResponse = await fetch(blob.url);
-                        if (!userDataResponse.ok) {
-                            throw new Error(`Error ${userDataResponse.status}: ${userDataResponse.statusText}`);
-                        }
-                        const userData = await userDataResponse.json();
-                        console.log(userData);
-                        return userData; // Retorna os dados do usuário
-                    } catch (err) {
-                        console.error(`Erro ao buscar dados do blob ${blob.url}: ${err}`);
-                        return null; // Retorna null se houver erro
-                    }
-                }));
-    
-                // Filtrar dados válidos (remover nulos)
-                const filteredData: IUser[] = fetchedUsers.filter((user: IUser | null) => user !== null);
-    
-                setDataBlobs(filteredData);
-                // setDataBlobs(userData)
-            } catch (error) {
-                console.error("Falha ao buscar dados iniciais", error);
+              const response = await fetch('/api/list', { signal });
+              // ... lidar com a resposta bem-sucedida
+            } catch (error: any) {
+              if (error.name === 'AbortError') {
+                console.error('Solicitação abortada devido ao tempo limite');
+                // Lidar com o erro de tempo limite com elegância (por exemplo, exibir mensagem para o usuário)
+              } else {
+                // Lidar com outros erros
+              }
+            } finally {
+              clearTimeout(timer);
             }
-        };
+          };
     
         fetchData();
     }, []);
