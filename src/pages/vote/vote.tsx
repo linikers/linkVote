@@ -64,7 +64,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
                 const response = await fetch('/api/list', { signal });
                 if (response.ok) {
                     const result = await response.json();
-                    setDataBlobs(result.blobs.map((blob: { content: any; }) => blob.content));
+                    setDataBlobs(result);
                 } else {
                     console.error('Falha ao buscar dados');
                 }

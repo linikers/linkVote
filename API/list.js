@@ -9,10 +9,10 @@ const blobServiceClient = {
 
 export default async function handler(req, res) {
   try {
-    const { prefix = '' } = req.query;
+    const { prefix = 'competidores/' } = req.query;
 
     const blobs = await list({ 
-      prefix: `competidores/${prefix}`, 
+      prefix, 
       token: blobServiceClient.token 
     });
 
@@ -20,11 +20,11 @@ export default async function handler(req, res) {
       blobs.keys.map(async (key) => {
         const blob = await get({ key, token: blobServiceClient.token });
         const content = await blob.text();
-        return { key, content: JSON.parse(content) };
+        return JSON.parse(content);
       })
     );
 
-    res.status(200).json({ blobs: blobContents });
+    res.status(200).json(blobContents);
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: error.message });
