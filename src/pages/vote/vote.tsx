@@ -51,7 +51,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
 
     useEffect(() => {
         const fetchData = async () => {
-            const timeout = 5000; 
+            const timeout = 15000; 
             const controller = new AbortController();
             const signal = controller.signal;
           

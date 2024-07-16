@@ -36,7 +36,7 @@ app.get('/api/list', async (request, response) => {
       const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
       response.json({ blobs: blobs.blobs }); 
     } catch (error) {
-      console.error("Erro na index da api", error);
+      console.error("Erro na index list da api", error);
       response.status(500).json({ error: error.message });
     }
   });
