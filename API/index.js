@@ -27,19 +27,9 @@ app.post('/api/save', async (request, response)=> {
         console.error(error);
         response.status(500).json({ success: false, error: error.message })
     }
-
+    app.use('/api/list', listRouter);
 })
 
-app.get('/api/list', async (request, response) => {
-    try {
-      const { prefix = '' } = request.query; 
-      const blobs = await list({ prefix: `competidores/${prefix}`, token: blobServiceClient.token });
-      response.json({ blobs: blobs.blobs }); 
-    } catch (error) {
-      console.error("Erro na index list da api", error);
-      response.status(500).json({ error: error.message });
-    }
-  });
 export default app;
 
 // No deploy do Vercel, a porta é definida pela plataforma
