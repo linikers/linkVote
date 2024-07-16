@@ -10,7 +10,7 @@ const blobServiceClient = {
 
 router.get('/', async (req, res) => {
   try {
-    const { prefix = 'competidores/users' } = req.query; // Prefixo correto aqui?
+    const { prefix = '/competidores/' } = req.query; // Prefixo correto aqui?
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
@@ -19,7 +19,7 @@ router.get('/', async (req, res) => {
     const blobs = await list({ prefix: `${prefix}`, token: blobServiceClient.token });
 
     const blobContents = await Promise.all(
-      blobs.keys.map(async (key) => {
+      blobs.pathname.map(async (key) => {
         const blob = await get({ key, token: blobServiceClient.token });
         const content = await blob.text();
         return JSON.parse(content);
