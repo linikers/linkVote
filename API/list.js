@@ -8,9 +8,9 @@ const blobServiceClient = {
   token: process.env.BLOB_READ_WRITE_TOKEN,
 };
 
-router.get('/competidores', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
-    const { prefix = 'users/' } = req.query;
+    const { prefix = 'competidores/' } = req.query; // Prefixo correto aqui?
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
