@@ -9,7 +9,7 @@ const blobServiceClient = {
 
 export default async function handler(req, res) {
   try {
-    const { prefix = 'competidores/' } = req.query;
+    const { prefix = 'rocketVotes/competidores/' } = req.query;
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
