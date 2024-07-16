@@ -1,24 +1,25 @@
+// list.js (ou handler.js)
 import { list, get } from '@vercel/blob';
+import express from 'express';
 import dotenv from 'dotenv';
 
 dotenv.config();
+
+const router = express.Router();
 
 const blobServiceClient = {
   token: process.env.BLOB_READ_WRITE_TOKEN,
 };
 
-export default async function handler(req, res) {
+router.get('/', async (req, res) => {
   try {
-    const { prefix = 'rocketVotes/competidores/' } = req.query;
+    const { prefix = 'competidores/' } = req.query;
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
     }
 
-    const blobs = await list({ 
-      prefix, 
-      token: blobServiceClient.token 
-    });
+    const blobs = await list({ prefix: `${prefix}`, token: blobServiceClient.token });
 
     const blobContents = await Promise.all(
       blobs.keys.map(async (key) => {
@@ -33,4 +34,6 @@ export default async function handler(req, res) {
     console.error('Erro ao listar blobs:', error);
     res.status(500).json({ error: 'Erro interno ao processar a requisição.' });
   }
-}
+});
+
+export default router;
