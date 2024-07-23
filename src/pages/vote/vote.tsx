@@ -46,14 +46,14 @@ interface VoteProps {
 
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
     const [, setTotalVotes] = useState(0);
-    const [, setUsersWithPercent] = useState<IUser[]>([]);
+    // const [, setUsersWithPercent] = useState<IUser[]>([]);
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
 
     useEffect(() => {
         const fetchData = async () => {
             const timeout = 15000; 
             const controller = new AbortController();
-            const signal = controller.signal;
+            // const signal = controller.signal;
           
             const timer = setTimeout(() => {
                 controller.abort();
@@ -61,12 +61,21 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             }, timeout);
           
             try {
-                const response = await fetch('/api/list', { signal });
+                const response = await fetch('/api/list/', { signal:controller.signal });
                 if (response.ok) {
-                    const result = await response.json();
-                    setDataBlobs(result);
+                    const contentType = response.headers.get("content-type");
+                    if(contentType && contentType.indexOf("aplication/json") !== -1) {
+                        const result = await response.json();
+                        console.log(result);
+                        setDataBlobs(result);
+                    } else {
+                        console.error("Resposta não é JSON", await response.text());
+                    }
+                    // const result = await response.json();
+                    // console.log(dataBlobs);
+                    // setDataBlobs(result);
                 } else {
-                    console.error('Falha ao buscar dados');
+                    console.error('Falha ao buscar dados', response.status, await response.text());
                 }
             } catch (error: any) {
                 if (error.name === 'AbortError') {
@@ -146,11 +155,11 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         const total = users.reduce((total, user) => total + user.votes, 0);
         setTotalVotes(total);
 
-        const updatedUsersWithPercent = users.map(user => ({
-            ...user,
-            percent: total > 0 ? ((user.votes / total) * 100) : 0,
-        }));
-        setUsersWithPercent(updatedUsersWithPercent);
+        // const updatedUsersWithPercent = users.map(user => ({
+        //     ...user,
+        //     percent: total > 0 ? ((user.votes / total) * 100) : 0,
+        // }));
+        // setUsersWithPercent(updatedUsersWithPercent);
     }, [users]);
 
     return (

@@ -1,4 +1,3 @@
-// list.js (ou handler.js)
 import express from 'express';
 import { list, get } from '@vercel/blob';
 
@@ -10,19 +9,52 @@ const blobServiceClient = {
 
 router.get('/', async (req, res) => {
   try {
-    const { prefix = '/competidores/' } = req.query; // Prefixo correto aqui?
+    const { prefix = 'competidores/' } = req.query;
 
     if (!blobServiceClient.token) {
       throw new Error('Token de acesso não configurado corretamente.');
     }
 
     const blobs = await list({ prefix: `${prefix}`, token: blobServiceClient.token });
-
+    console.log(blobs);
     const blobContents = await Promise.all(
-      blobs.pathname.map(async (key) => {
-        const blob = await get({ key, token: blobServiceClient.token });
-        const content = await blob.text();
-        return JSON.parse(content);
+      blobs.keys.map(async (key) => {
+        try {
+          const blob = await get({ key, token: blobServiceClient.token });
+          const content = await blob.text();
+          const jsonContent = JSON.parse(content); // Parse do conteúdo do blob
+
+          const {
+            name,
+            work,
+            votes,
+            percent,
+            anatomy,
+            creativity,
+            pigmentation,
+            traces,
+            readability,
+            visualImpact,
+            totalScore,
+          } = jsonContent; // Extrair dados do JSON
+
+          return {
+            name,
+            work,
+            votes,
+            percent,
+            anatomy,
+            creativity,
+            pigmentation,
+            traces,
+            readability,
+            visualImpact,
+            totalScore,
+          };
+        } catch (error) {
+          console.error('Erro ao processar blob:', error);
+          throw new Error('Erro ao ler conteúdo do blob.');
+        }
       })
     );
 
