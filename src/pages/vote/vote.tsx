@@ -3,6 +3,7 @@ import { FC, useEffect, useState } from "react";
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
+import { list } from "@vercel/blob";
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -44,7 +45,7 @@ interface VoteProps {
     setUsers: (users: IUser[]) => void;
 }
 
-export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
+export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) => {
     const [, setTotalVotes] = useState(0);
     // const [, setUsersWithPercent] = useState<IUser[]>([]);
     const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
@@ -95,7 +96,6 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
 
     const handleVote = async (userName: string) => {
         const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
-    
         if (votedUsers.includes(userName)) {
             onOpenSnackBar(`Você já votou em ${userName}`);
             return;
@@ -163,7 +163,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         // }));
         // setUsersWithPercent(updatedUsersWithPercent);
     }, [users]);
-
+    const response = await list();
     return (
         <Grid container 
             sx={{ 
@@ -180,8 +180,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {dataBlobs.length > 0 ? (
-                        dataBlobs.map((user, index) => (
+                    {response.blobs.length > 0 ? (
+                        response.blobs.map((user, index) => (
                             <Grid
                                 key={index}
                                 xs={12} item
