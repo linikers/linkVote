@@ -62,6 +62,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
           
             try {
                 const response = await fetch('/api/list/', { signal:controller.signal });
+                console.log(response);
                 if (response.ok) {
                     console.log(response);
                     const contentType = response.headers.get("content-type");
