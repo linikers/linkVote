@@ -8,8 +8,7 @@ const blobServiceClient = {
 };
 
 export default async function handlerList(
-  request: req,
-  response: resp,
+
 ) {
   const blob = await put('/')
 }

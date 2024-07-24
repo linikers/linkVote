@@ -1,9 +1,9 @@
+import React, { FC, useEffect, useState } from "react";
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
-import { FC, useEffect, useState } from "react";
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { list } from "@vercel/blob";
+import { ListBlobResultBlob, list } from "@vercel/blob";
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -41,86 +41,93 @@ const schema = yup.object({
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
-    users: IUser[];
-    setUsers: (users: IUser[]) => void;
+    users?: IUser[];
+    setUsers?: (users: IUser[]) => void;
 }
 
-export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) => {
-    const [, setTotalVotes] = useState(0);
-    // const [, setUsersWithPercent] = useState<IUser[]>([]);
-    const [dataBlobs, setDataBlobs] = useState<IUser[]>([]);
+export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
+    // const [, setTotalVotes] = useState(0);
 
+    // const [, setUsersWithPercent] = useState<IUser[]>([]);
+    // const [dataBlobs, setDataBlobs] = useState();
+    const [dataBlobs, setDataBlobs] = useState<ListBlobResultBlob[]>([]);
+    // const response = await list();
     useEffect(() => {
         const fetchData = async () => {
-            const timeout = 15000; 
-            const controller = new AbortController();
-            // const signal = controller.signal;
-          
-            const timer = setTimeout(() => {
-                controller.abort();
-                console.error('Solicitação expirada');
-            }, timeout);
-          
-            try {
-                const response = await fetch('/api/list', { signal:controller.signal });
-                console.log(response);
-                if (response.ok) {
-                    console.log(response);
-                    const contentType = response.headers.get("content-type");
-                    if(contentType) {
-                        const result = await response.json();
-                        console.log(result);
-                        setDataBlobs(result);
-                    } else {
-                        console.error("Resposta não é JSON", await response.text());
-                    }
-                    // const result = await response.json();
-                    // console.log(dataBlobs);
-                    // setDataBlobs(result);
-                } else {
-                    console.error('Falha ao buscar dados', response.status, await response.text());
-                }
-            } catch (error: any) {
-                if (error.name === 'AbortError') {
-                    console.error('Solicitação abortada devido ao tempo limite');
-                } else {
-                    console.error('Erro ao buscar dados:', error);
-                }
-            } finally {
-                clearTimeout(timer);
-            }
-        };
-
-        fetchData();
-    }, []);
-
-    const handleVote = async (userName: string) => {
-        const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
-        if (votedUsers.includes(userName)) {
-            onOpenSnackBar(`Você já votou em ${userName}`);
-            return;
+            const response = await list();
+            setDataBlobs(response.blobs)
         }
+        fetchData()
+    }, [])
+
+    // useEffect(() => {
+    //     const fetchData = async () => {
+    //         const timeout = 15000; 
+    //         const controller = new AbortController();
+    //         // const signal = controller.signal;
+          
+    //         const timer = setTimeout(() => {
+    //             controller.abort();
+    //             console.error('Solicitação expirada');
+    //         }, timeout);
+          
+    //         try {
+    //             const response = await fetch('/api/list', { signal:controller.signal });
+    //             console.log(response);
+    //             if (response.ok) {
+    //                 console.log(response);
+    //                 const contentType = response.headers.get("content-type");
+    //                 if(contentType) {
+    //                     const result = await response.json();
+    //                     console.log(result);
+    //                     setDataBlobs(result);
+    //                 } else {
+    //                     console.error("Resposta não é JSON", await response.text());
+    //                 }
+    //             } else {
+    //                 console.error('Falha ao buscar dados', response.status, await response.text());
+    //             }
+    //         } catch (error: any) {
+    //             if (error.name === 'AbortError') {
+    //                 console.error('Solicitação abortada devido ao tempo limite');
+    //             } else {
+    //                 console.error('Erro ao buscar dados:', error);
+    //             }
+    //         } finally {
+    //             clearTimeout(timer);
+    //         }
+    //     };
+
+    //     fetchData();
+    // }, []);
+
+    // const handleVote = async (userName: string) => {
+    //     const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
+    //     if (votedUsers.includes(userName)) {
+    //         onOpenSnackBar(`Você já votou em ${userName}`);
+    //         return;
+    //     }
     
-        const updatedUsers = users.map(user => {
-            if (user.name === userName) {
-                const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact;
-                return { ...user, votes: user.votes + 1, totalScore };
-            }
-            return user;
-        });
+    //     const updatedUsers = users.map(user => {
+    //         if (user.name === userName) {
+    //             const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact;
+    //             return { ...user, votes: user.votes + 1, totalScore };
+    //         }
+    //         return user;
+    //     });
     
-        setUsers(updatedUsers);
+    //     setUsers(updatedUsers);
         
-        await fetch('/api/save', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ key: `competidores/users-${userName}.json`, value: updatedUsers.find(user => user.name === userName) }),
-        });
+    //     await fetch('/api/save', {
+    //         method: 'POST',
+    //         headers: { 'Content-Type': 'application/json' },
+    //         body: JSON.stringify({ key: `competidores/users-${userName}.json`, value: updatedUsers.find(user => user.name === userName) }),
+    //     });
     
-        localStorage.setItem('votedUsers', JSON.stringify([...votedUsers, userName]));
+    //     localStorage.setItem('votedUsers', JSON.stringify([...votedUsers, userName]));
     
-        onOpenSnackBar(`Você votou em ${userName}`);
-    };
+    //     onOpenSnackBar(`Você votou em ${userName}`);
+    // };
 
     const formik = useFormik({
         initialValues: {
@@ -134,18 +141,18 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
         },
         validationSchema: schema,
         onSubmit: async (values, { resetForm }) => {
-            const updatedUsers = users.map(user => {
-                if (user.name === values.name) {
-                    return { ...user, ...values };
-                }
-                return user;
-            });
-            setUsers(updatedUsers);
+            // const updatedUsers = users.map(user => {
+            //     if (user.name === values.name) {
+            //         return { ...user, ...values };
+            //     }
+            //     return user;
+            // });
+            // setUsers(updatedUsers);
 
             await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ key: `competidores/users-${values.name}.json`, value: updatedUsers.find(user => user.name === values.name) }),
+                // body: JSON.stringify({ key: `competidores/users-${values.name}.json`, value: updatedUsers.find(user => user.name === values.name) }),
             });
 
             onOpenSnackBar(`Você votou em ${values.name}`);
@@ -153,17 +160,17 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
         },
     });
 
-    useEffect(() => {
-        const total = users.reduce((total, user) => total + user.votes, 0);
-        setTotalVotes(total);
+    // useEffect(() => {
+    //     const total = users.reduce((total, user) => total + user.votes, 0);
+    //     setTotalVotes(total);
 
-        // const updatedUsersWithPercent = users.map(user => ({
-        //     ...user,
-        //     percent: total > 0 ? ((user.votes / total) * 100) : 0,
-        // }));
-        // setUsersWithPercent(updatedUsersWithPercent);
-    }, [users]);
-    const response = await list();
+    //     const updatedUsersWithPercent = users.map(user => ({
+    //         ...user,
+    //         percent: total > 0 ? ((user.votes / total) * 100) : 0,
+    //     }));
+    //     setUsersWithPercent(updatedUsersWithPercent);
+    // }, [users]);
+
     return (
         <Grid container 
             sx={{ 
@@ -180,8 +187,8 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {response.blobs.length > 0 ? (
-                        response.blobs.map((user, index) => (
+                    {dataBlobs.length > 0 ? (
+                        dataBlobs.map((user, index) => (
                             <Grid
                                 key={index}
                                 xs={12} item
@@ -205,9 +212,9 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
                                 <Typography 
                                     style={{ fontWeight: "bold" }}
                                 >
-                                    {user.name}
+                                    {user.pathname}
                                 </Typography>
-                                <Typography style={{ color: "#757575" }}>{user.work}</Typography>
+                                <Typography style={{ color: "#757575" }}>{user.pathname}</Typography>
                                 
                                 <TextField 
                                     label="Anatomia"
@@ -284,14 +291,14 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
                                 <Button
                                     variant="contained"
                                     color="primary"
-                                    onClick={() => handleVote(user.name)}
+                                    // onClick={() => handleVote(user.url)}
                                     style={{ marginTop: "0.5rem", backgroundColor: "#adb5bd", width: "6rem" }}
                                 >
                                     Votar
                                 </Button>
                                 <LinearProgress
                                     variant="determinate"
-                                    value={user.percent}
+                                    // value={user.}
                                     sx={{ 
                                         backgroundColor: "#414141",
                                         marginTop: "0.5rem", 
@@ -303,7 +310,7 @@ export const Vote: FC<VoteProps> = async ({ onOpenSnackBar, users, setUsers }) =
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {user.votes} votos ({user.percent?.toFixed()} %)
+                                    {user.size} votos ({user.size?.toFixed()} %)
                                 </Typography>
                             </Grid>
                         ))
