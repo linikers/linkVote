@@ -15,13 +15,15 @@ router.get('/', async (req, res) => {
       throw new Error('Token de acesso não configurado corretamente.');
     }
 
-    const blobs = await list({ prefix: `${prefix}`, token: blobServiceClient.token });
+    const blobs = await list({ prefix, token: blobServiceClient.token });
     console.log(blobs);
     const blobContents = await Promise.all(
       blobs.keys.map(async (key) => {
         try {
           const blob = await get({ key, token: blobServiceClient.token });
+          console.log(blob);
           const content = await blob.text();
+          console.log(content);
           const jsonContent = JSON.parse(content); // Parse do conteúdo do blob
 
           const {

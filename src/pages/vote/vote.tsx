@@ -63,8 +63,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar, users, setUsers }) => {
             try {
                 const response = await fetch('/api/list/', { signal:controller.signal });
                 if (response.ok) {
+                    console.log(response);
                     const contentType = response.headers.get("content-type");
-                    if(contentType && contentType.indexOf("aplication/json") !== -1) {
+                    if(contentType) {
                         const result = await response.json();
                         console.log(result);
                         setDataBlobs(result);
