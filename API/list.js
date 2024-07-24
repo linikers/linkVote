@@ -13,24 +13,8 @@ router.get('/', async (req, res) => {
     res.status(200).json(response.blobs);
   } catch (error) {
     console.error('Error fetching blobs:', error);
-    res.status(500).json({ error: 'Failed to fetch blobs' });
+    res.status(500).json({ error: 'Falha no fetch dos blobs' });
   }
 });
 
 export default router;
-
-
-// import express from 'express';
-// import { list, get } from '@vercel/blob';
-
-// const router = express.Router();
-
-// const blobServiceClient = {
-//   token: process.env.BLOB_READ_WRITE_TOKEN,
-// };
-
-// export default async function handlerList(
-
-// ) {
-//   const blob = await put('/')
-// }

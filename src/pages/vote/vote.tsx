@@ -58,7 +58,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
 
         const fetchData = async () => {
           try {
-            const response = await axios.get('/api/list'); // Substitua pela URL correta da sua API
+            const response = await axios.get('/api/list/competidores'); 
             const blobs = response.data;
             // Faça algo com os blobs
             console.log(blobs);
