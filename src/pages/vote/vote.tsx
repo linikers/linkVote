@@ -3,7 +3,7 @@ import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/materi
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ListBlobResultBlob, list } from "@vercel/blob";
+import { ListBlobResultBlob } from "@vercel/blob";
 import axios from 'axios';
 
 const schema = yup.object({
@@ -62,53 +62,13 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
             const blobs = response.data;
             // Faça algo com os blobs
             console.log(blobs);
+            setDataBlobs(blobs);
           } catch (error) {
             console.error('Error fetching data:', error);
           }
         };
         fetchData();
     }, [])
-
-    // useEffect(() => {
-    //     const fetchData = async () => {
-    //         const timeout = 15000; 
-    //         const controller = new AbortController();
-    //         // const signal = controller.signal;
-          
-    //         const timer = setTimeout(() => {
-    //             controller.abort();
-    //             console.error('Solicitação expirada');
-    //         }, timeout);
-          
-    //         try {
-    //             const response = await fetch('/api/list', { signal:controller.signal });
-    //             console.log(response);
-    //             if (response.ok) {
-    //                 console.log(response);
-    //                 const contentType = response.headers.get("content-type");
-    //                 if(contentType) {
-    //                     const result = await response.json();
-    //                     console.log(result);
-    //                     setDataBlobs(result);
-    //                 } else {
-    //                     console.error("Resposta não é JSON", await response.text());
-    //                 }
-    //             } else {
-    //                 console.error('Falha ao buscar dados', response.status, await response.text());
-    //             }
-    //         } catch (error: any) {
-    //             if (error.name === 'AbortError') {
-    //                 console.error('Solicitação abortada devido ao tempo limite');
-    //             } else {
-    //                 console.error('Erro ao buscar dados:', error);
-    //             }
-    //         } finally {
-    //             clearTimeout(timer);
-    //         }
-    //     };
-
-    //     fetchData();
-    // }, []);
 
     // const handleVote = async (userName: string) => {
     //     const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
