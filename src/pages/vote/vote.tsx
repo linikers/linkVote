@@ -44,9 +44,6 @@ interface VoteProps {
     users?: IUser[];
     setUsers?: (users: IUser[]) => void;
 }
-const blobServiceClient = {
-    token: process.env.BLOB_READ_WRITE_TOKEN,
-  };
 
 export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
     // const [, setTotalVotes] = useState(0);
@@ -57,7 +54,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
     // const response = await list();
     useEffect(() => {
         const fetchData = async () => {
-            const response = await list({ token: blobServiceClient.token });
+            const response = await list({ token: "vercel_blob_rw_kBoXW6iDI0S5WZe2_v4AGRdaSelY8G0KyH7NdUmCNBsRrc6" });
             setDataBlobs(response.blobs)
         }
         fetchData()
