@@ -4,6 +4,7 @@ import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ListBlobResultBlob, list } from "@vercel/blob";
+import axios from 'axios';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -53,11 +54,19 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
     const [dataBlobs, setDataBlobs] = useState<ListBlobResultBlob[]>([]);
     // const response = await list();
     useEffect(() => {
+
+
         const fetchData = async () => {
-            const response = await list({ token: "vercel_blob_rw_kBoXW6iDI0S5WZe2_v4AGRdaSelY8G0KyH7NdUmCNBsRrc6" });
-            setDataBlobs(response.blobs)
-        }
-        fetchData()
+          try {
+            const response = await axios.get('/api/list'); // Substitua pela URL correta da sua API
+            const blobs = response.data;
+            // Faça algo com os blobs
+            console.log(blobs);
+          } catch (error) {
+            console.error('Error fetching data:', error);
+          }
+        };
+        fetchData();
     }, [])
 
     // useEffect(() => {
