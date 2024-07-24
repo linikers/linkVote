@@ -57,7 +57,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await axios.get('/api/list'); // Busca todos os blobs
+                const response = await axios.get('api/list'); // Busca todos os blobs
                 const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
                 setDataBlobs(filteredBlobs);
               } catch (error) {
