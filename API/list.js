@@ -9,7 +9,11 @@ const blobServiceClient = {
 
 router.get('/competidores', async (req, res) => {
   try {
-    const response = await list({ token: blobServiceClient.token });
+    const response = await list({ 
+     token: blobServiceClient.token,
+     containerName: 'competidores',
+     });
+     
     res.status(200).json(response.blobs);
   } catch (error) {
     console.error('Error fetching blobs:', error);

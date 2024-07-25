@@ -57,9 +57,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await axios.get('api/list'); // Busca todos os blobs
-                const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
-                setDataBlobs(filteredBlobs);
+                const response = await axios.get('api/competidores');
+                setDataBlobs(response.data)
+                // setDataBlobs(filteredBlobs);
               } catch (error) {
                 console.error('Error fetching data:', error);
               }
