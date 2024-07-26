@@ -4,7 +4,7 @@ import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
 import { ListBlobResultBlob, list } from "@vercel/blob";
-import axios from 'axios';
+// import axios from 'axios';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
