@@ -1,14 +1,16 @@
 import express from 'express';
 import { list } from '@vercel/blob';
 
+dotenv.config();
 const router = express.Router();
 
 const blobServiceClient = {
   token: process.env.BLOB_READ_WRITE_TOKEN,
 };
 
-router.get('/', async (req, res) => {
+router.list('/competidores', async (req, res) => {
   try {
+    if(!blobServiceClient.token) throw new Error("Token inválido")
     const response = await list({ 
      token: blobServiceClient.token,
      containerName: 'competidores',

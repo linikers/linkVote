@@ -3,8 +3,8 @@ import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/materi
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ListBlobResultBlob, list } from "@vercel/blob";
-// import axios from 'axios';
+import { ListBlobResultBlob } from "@vercel/blob";
+import axios from 'axios';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -57,8 +57,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await list(); // Busca todos os blobs
-                const filteredBlobs = response.blobs; // Filtragem local
+                const response = await axios.get('api/list'); // Busca todos os blobs
+                const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
                 setDataBlobs(filteredBlobs);
               } catch (error) {
                 console.error('Erro fetching data:', error);
