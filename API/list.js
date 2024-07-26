@@ -7,7 +7,7 @@ const blobServiceClient = {
   token: process.env.BLOB_READ_WRITE_TOKEN,
 };
 
-router.get('/competidores', async (req, res) => {
+router.get('/', async (req, res) => {
   try {
     const response = await list({ 
      token: blobServiceClient.token,
