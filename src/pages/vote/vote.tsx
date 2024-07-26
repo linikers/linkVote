@@ -3,7 +3,7 @@ import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/materi
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ListBlobResultBlob } from "@vercel/blob";
+import { ListBlobResultBlob, list } from "@vercel/blob";
 import axios from 'axios';
 
 const schema = yup.object({
@@ -57,14 +57,15 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await axios.get('api/competidores');
-                setDataBlobs(response.data)
-                // setDataBlobs(filteredBlobs);
+                const response = await list(); // Busca todos os blobs
+                const filteredBlobs = response.blobs; // Filtragem local
+                setDataBlobs(filteredBlobs);
               } catch (error) {
-                console.error('Error fetching data:', error);
+                console.error('Erro fetching data:', error);
               }
             };
         
+            // const response = await list();
             fetchData();
           }, []);
 

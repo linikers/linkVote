@@ -13,7 +13,6 @@ router.get('/competidores', async (req, res) => {
      token: blobServiceClient.token,
      containerName: 'competidores',
      });
-     
     res.status(200).json(response.blobs);
   } catch (error) {
     console.error('Error fetching blobs:', error);
