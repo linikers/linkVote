@@ -1,74 +1,16 @@
-import { useState } from 'react'
-// import './App.css'
-import { Button, Grid} from '@material-ui/core'
-import { Header } from './components/header'
-import { Vote } from './pages/vote/vote'
-import { IUser, Register } from './pages/Register'
-import { Top10 } from './pages/Top10'
-import { SnackBarCustom } from './components/Snackbar'
+import { CssBaseline, ThemeProvider } from "@mui/material";
+import { useGlobalStyles } from "./assets/themes/globalStyles";
+import { AppProps } from "next/app";
+import { theme } from "./assets/themes/theme";
+// import { Component } from "react";
 
-function App() {
-  const [users, setUsers] = useState<IUser[]>([]);
-  const [currentPage, setCurrentPage] = useState('home')
-  const [snackBarMessage, setSnackBarMessage] = useState("");
-  const [, setSnackBarOpen] = useState(false);
-
-  const handleNavigateVote = () => {
-    setCurrentPage('vote')
-  }
-  const handleNavigateRegister = () => {
-    setCurrentPage('register')
-  }
-  const handleNavigateTop10 = () => {
-    setCurrentPage('top10')
-  }
-
-  const handleOpenSnackBar = (message: string) => {
-    setSnackBarMessage(message)
-    setSnackBarOpen(true);
-  }
-  
-  return (
-    <>
-    <Grid container 
-      style={{ 
-        display: "flex", 
-        flexDirection: "column", 
-        alignItems: "center" ,
-        margin: "1rem", 
-        width: "100%", 
-        boxSizing: "border-box",
-      }}
-    >
-      <Grid item style={{ width: "100%", maxWidth: "1200px" }}>
-        <Header />
-      </Grid>
-      <Grid item 
-        style={{ 
-          display: "flex", 
-          flexDirection: "row", 
-          alignItems: "center" ,
-          justifyContent: "center",
-          width: "100%",        }}
-      >
-        <Button color= 'secondary' onClick={handleNavigateVote}>Vote Agora</Button>
-        <Button color= 'secondary' onClick={handleNavigateRegister}>Registre o participante</Button>
-        <Button color= 'secondary' onClick={handleNavigateTop10}>Classificação Geral</Button>
-      </Grid>
-        <Grid item xs={12} style={{ 
-          display: "flex", justifyContent: "center" }}>
-          {currentPage === 'vote' && 
-            <Vote onOpenSnackBar={handleOpenSnackBar} users={users} setUsers={setUsers} />}
-          {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
-          {currentPage === 'top10' && <Top10  users={users}/>}
-        </Grid>
-    </Grid>
-    <SnackBarCustom 
-      message={snackBarMessage}
-      severity="success"
-    />
-  </>
-  )
+function App({ Component, pageProps}: AppProps) {
+    useGlobalStyles();
+    return(
+        <ThemeProvider theme={theme}>
+            <CssBaseline />
+            <Component {...pageProps} />
+        </ThemeProvider>
+    )
 }
-
 export default App

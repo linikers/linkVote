@@ -1,6 +1,6 @@
 import { Button, FormControl, Grid, TextField } from "@mui/material";
 import React, { FC, FormEvent, useState } from "react";
-import { v4 as uuidV4 } from "uuid";
+// import { v4 as uuidV4 } from "uuid";
 
 export interface IUser {
   id: string;
@@ -36,9 +36,9 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
     visualImpact: 0,
     totalScore: 0,
   });
-  const [snackbarMessage, setSnackbarMessage] = useState("");
-  const [snackbarSeverity, setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("success");
-  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [ , setSnackbarMessage] = useState("");
+  const [ , setSnackbarSeverity] = useState<"success" | "error" | "warning" | "info">("success");
+  const [ , setSnackbarOpen] = useState(false);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -91,7 +91,7 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
         visualImpact: 0,
         totalScore: 0,
       });
-
+      savedUser();
     } catch (error) {
       setSnackbarMessage("Erro ao salvar");
       setSnackbarSeverity("error");

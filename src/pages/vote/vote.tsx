@@ -1,10 +1,10 @@
 import { FC, useEffect, useState } from "react";
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
-import { IUser } from "../Register";
+import { IUser } from "../Register/register";
 import { useFormik } from "formik";
 import * as yup from "yup";
 // import { ListBlobResultBlob } from "@vercel/blob";
-// import axios from 'axios';
+import axios from 'axios';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -51,15 +51,15 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
 
     // const [, setUsersWithPercent] = useState<IUser[]>([]);
     // const [dataBlobs, setDataBlobs] = useState();
-    // const [dataBlobs, setDataBlobs] = useState([]);
+    const [data, setData] = useState([]);
     // const response = await list();
 
         useEffect(() => {
             const fetchData = async () => {
               try {
-                // const response = await axios.get('api/list'); // Busca todos os blobs
-                // const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
-                // setDataBlobs(filteredBlobs);
+                const response = await axios.get('api/list'); 
+                const filteredData = response.data
+                setData(filteredData);
               } catch (error) {
                 console.error('Erro fetching data:', error);
               }
@@ -155,9 +155,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {
-                    dataBlobs.length > 0 ? (
-                        dataBlobs.map((user, index) => (
+                    {data.length > 0 ? (
+                        data.map((user, index) => (
                             <Grid
                                 key={index}
                                 xs={12} item
@@ -181,9 +180,9 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
                                 <Typography 
                                     style={{ fontWeight: "bold" }}
                                 >
-                                    {user.pathname}
+                                    {user}
                                 </Typography>
-                                <Typography style={{ color: "#757575" }}>{user.pathname}</Typography>
+                                <Typography style={{ color: "#757575" }}>{user}</Typography>
                                 
                                 <TextField 
                                     label="Anatomia"
@@ -279,7 +278,7 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {user.size} votos ({user.size?.toFixed()} %)
+                                    {/* {user} votos ({user?.toFixed()} %) */}
                                 </Typography>
                             </Grid>
                         ))

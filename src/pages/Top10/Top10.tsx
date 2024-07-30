@@ -1,7 +1,6 @@
 import { FC } from "react"
 import { Box, Grid, Paper, Typography } from "@mui/material"
-import { IUser } from "../Register"
-
+import { IUser} from "../Register/register"
 interface Top10Props {
     users: IUser[]
 }

@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { IUser, Register } from "./pages/Register";
+import { IUser, Register } from "./pages/Register/register";
 import { Button, Grid } from "@mui/material";
 import { Header } from "./components/header";
-import { Vote } from "./pages/vote";
-import { Top10 } from "./pages/Top10";
+import { Vote } from "./pages/vote/vote";
+import { Top10 } from "./pages/Top10/Top10";
 import { SnackBarCustom } from "./components/Snackbar";
 
 function App() {
