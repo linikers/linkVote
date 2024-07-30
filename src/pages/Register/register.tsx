@@ -45,8 +45,10 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
-            [name]: value,
-        });
+            [name]: name === 'votes' || name === 'anatomy' || name === 'creativity' || 
+            name === 'pigmentation' || name === 'traces' || name === 'readability' || 
+            name === 'visualImpact' || name === 'totalScore' ? parseFloat(value) : value,
+});
     };
 
     const handleRegister = async (e: FormEvent) => {
@@ -86,13 +88,28 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
       
           setFormData((prevState) => ({
             ...prevState,
-            users: [...savedUsers, newUser]
+            users: [...prevState.name, newUser]
         }));
       
-          setSnackbarMessage("Registrado com sucesso!");
-          setSnackbarSeverity("success");
-          setSnackbarOpen(true);
-          onRegister(); 
+        setFormData({
+          id: "",
+          name: "",
+          work: "",
+          votes: 0,
+          percent: 0,
+          anatomy: 0,
+          creativity: 0,
+          pigmentation: 0,
+          traces: 0,
+          readability: 0,
+          visualImpact: 0,
+          totalScore: 0,
+        });  
+
+        setSnackbarMessage("Registrado com sucesso!");
+        setSnackbarSeverity("success");
+        setSnackbarOpen(true);
+        onRegister(); 
       
         } catch (error) {
           setSnackbarMessage("Erro ao salvar");
