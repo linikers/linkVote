@@ -3,8 +3,8 @@ import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/materi
 import { IUser } from "../Register";
 import { useFormik } from "formik";
 import * as yup from "yup";
-import { ListBlobResultBlob } from "@vercel/blob";
-import axios from 'axios';
+// import { ListBlobResultBlob } from "@vercel/blob";
+// import axios from 'axios';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -51,15 +51,15 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
 
     // const [, setUsersWithPercent] = useState<IUser[]>([]);
     // const [dataBlobs, setDataBlobs] = useState();
-    const [dataBlobs, setDataBlobs] = useState<ListBlobResultBlob[]>([]);
+    // const [dataBlobs, setDataBlobs] = useState([]);
     // const response = await list();
 
         useEffect(() => {
             const fetchData = async () => {
               try {
-                const response = await axios.get('api/list'); // Busca todos os blobs
-                const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
-                setDataBlobs(filteredBlobs);
+                // const response = await axios.get('api/list'); // Busca todos os blobs
+                // const filteredBlobs = response.data.filter((blob: { folder: any; }) => blob.folder); // Filtragem local
+                // setDataBlobs(filteredBlobs);
               } catch (error) {
                 console.error('Erro fetching data:', error);
               }
@@ -155,7 +155,8 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {dataBlobs.length > 0 ? (
+                    {
+                    dataBlobs.length > 0 ? (
                         dataBlobs.map((user, index) => (
                             <Grid
                                 key={index}
