@@ -1,6 +1,5 @@
 import { useEffect, useState } from "react";
 import { IUser } from "../Register/register.tsx";
-import axios from "axios";
 import { useFormik } from "formik";
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
 import * as yup from 'yup';
@@ -47,54 +46,35 @@ interface VoteProps {
 
 export function Vote ({ onOpenSnackBar }:VoteProps) {
     // const [, setTotalVotes] = useState(0);
-
-    // const [, setUsersWithPercent] = useState<IUser[]>([]);
-    // const [dataBlobs, setDataBlobs] = useState();
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [loading, setLoading] = useState();
+    const [users, setUsers] = useState<IUser[] | []>([]);
     const [data, setData] = useState([]);
-    // const response = await list();
 
         useEffect(() => {
-            const fetchData = async () => {
+            const fetchUsers = async () => {
               try {
-                const response = await axios.get('api/list'); 
-                const filteredData = response.data
-                setData(filteredData);
+                const response = await fetch('/api/list'); 
+                if(!response.ok) {
+                    // const error = await response.json();
+                    // setSnackbarMessage(`Erro ao listar: ${error.error}`);
+                    // setSnackbarSeverity("error");
+                    setSnackbarOpen(true);
+                    // return;
+                }
+                const data = await response.json();
+                setUsers(data);
+                // setData(filteredData);
               } catch (error) {
                 console.error('Erro fetching data:', error);
               }
+              finally {
+                // setLoading(false)
+              }
             };
-        
-            // const response = await list();
-            fetchData();
-          }, []);
 
-    // const handleVote = async (userName: string) => {
-    //     const votedUsers = JSON.parse(localStorage.getItem('votedUsers') || '[]');
-    //     if (votedUsers.includes(userName)) {
-    //         onOpenSnackBar(`Você já votou em ${userName}`);
-    //         return;
-    //     }
-    
-    //     const updatedUsers = users.map(user => {
-    //         if (user.name === userName) {
-    //             const totalScore = user.anatomy + user.creativity + user.pigmentation + user.traces + user.readability + user.visualImpact;
-    //             return { ...user, votes: user.votes + 1, totalScore };
-    //         }
-    //         return user;
-    //     });
-    
-    //     setUsers(updatedUsers);
-        
-    //     await fetch('/api/save', {
-    //         method: 'POST',
-    //         headers: { 'Content-Type': 'application/json' },
-    //         body: JSON.stringify({ key: `competidores/users-${userName}.json`, value: updatedUsers.find(user => user.name === userName) }),
-    //     });
-    
-    //     localStorage.setItem('votedUsers', JSON.stringify([...votedUsers, userName]));
-    
-    //     onOpenSnackBar(`Você votou em ${userName}`);
-    // };
+            fetchUsers();
+          }, []);
 
     const formik = useFormik({
         initialValues: {
@@ -108,18 +88,17 @@ export function Vote ({ onOpenSnackBar }:VoteProps) {
         },
         validationSchema: schema,
         onSubmit: async (values, { resetForm }) => {
-            // const updatedUsers = users.map(user => {
-            //     if (user.name === values.name) {
-            //         return { ...user, ...values };
-            //     }
-            //     return user;
-            // });
-            // setUsers(updatedUsers);
+            const updatedUsers = users.map(user => {
+                if (user.name === values.name) {
+                    return { ...user, ...values };
+                }
+                return user;
+            });
+            setUsers(updatedUsers);
 
             await fetch('/api/save', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                // body: JSON.stringify({ key: `competidores/users-${values.name}.json`, value: updatedUsers.find(user => user.name === values.name) }),
             });
 
             onOpenSnackBar(`Você votou em ${values.name}`);
@@ -154,10 +133,10 @@ export function Vote ({ onOpenSnackBar }:VoteProps) {
         
             <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
                 <Grid container spacing={3} sx={{ width:"100%" }}>
-                    {data.length > 0 ? (
-                        data.map((user, index) => (
+                    {users.length > 0 ? (
+                        users.map((user, index) => (
                             <Grid
-                                key={index}
+                                key={user.id}
                                 xs={12} item
                                 sx={{
                                     display: "flex",
@@ -179,9 +158,9 @@ export function Vote ({ onOpenSnackBar }:VoteProps) {
                                 <Typography 
                                     style={{ fontWeight: "bold" }}
                                 >
-                                    {user}
+                                    {user.name}
                                 </Typography>
-                                <Typography style={{ color: "#757575" }}>{user}</Typography>
+                                <Typography style={{ color: "#757575" }}>{user.work}</Typography>
                                 
                                 <TextField 
                                     label="Anatomia"

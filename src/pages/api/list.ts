@@ -1,19 +1,27 @@
+// src/pages/api/list.ts
 import { createPool } from "@vercel/postgres";
-import { NextApiRequest, NextApiResponse } from "next";
+import { NextApiRequest, NextApiResponse } from "next/types";
 
 const pool = createPool({
   connectionString: process.env.POSTGRES_URL,
-})
-export default async (request: NextApiRequest, response: NextApiResponse) => {
-  if(request.method === ' GET') {
-    try {
-      const result = await pool.query('SELECT * FROM competidores');
-      response.status(200).json(result.rows)
-    } catch (error) {
-      response.status(500).json({ error: 'Erro ao listar competidores'})
+});
+
+export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+  try {
+    if (request.method === 'GET') {
+      try {
+        const result = await pool.query('SELECT * FROM competidores');
+        return response.status(200).json(result.rows);
+      } catch (error) {
+        console.error('Erro ao listar competidores:', error);
+        return response.status(500).json({ error: 'Erro ao listar competidores.' });
+      }
+    } else {
+      response.setHeader("Allow", ['GET']);
+      return response.status(405).end(`Method ${request.method} Not Allowed`);
     }
-  } else {
-    response.setHeader("Permitido", ['GET']);
-    response.status(405).end(`Method ${request.method} não permitido`)
+  } catch (error) {
+    console.error('Erro na API handler:', error);
+    return response.status(500).json({ error: 'Erro interno do servidor.' });
   }
-};
+}
