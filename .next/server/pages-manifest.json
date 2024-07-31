@@ -1,10 +1,7 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/api/list": "pages/api/list.js",
+  "/_document": "pages/_document.js",
   "/api/save": "pages/api/save.js",
-  "/Top10/Top10": "pages/Top10/Top10.js",
-  "/Register/register": "pages/Register/register.js",
-  "/vote/vote": "pages/vote/vote.js",
-  "/_document": "pages/_document.js"
+  "/api/list": "pages/api/list.js"
 }

@@ -1,5 +1,5 @@
 import { Button, FormControl, Grid, TextField } from "@mui/material";
-import React, { FC, FormEvent, useState } from "react";
+import React, { FormEvent, useState } from "react";
 // import { v4 as uuidV4 } from "uuid";
 
 export interface IUser {
@@ -21,7 +21,7 @@ interface IRegisterProps {
   onRegister: () => void;
 }
 
-export const Register: FC<IRegisterProps> = ({ onRegister }) => {
+export default function Register ({ onRegister }: IRegisterProps) {
   const [formData, setFormData] = useState<IUser>({
     id: "",
     name: "",
@@ -119,4 +119,4 @@ export const Register: FC<IRegisterProps> = ({ onRegister }) => {
       {/* Snackbar component would go here */}
     </form>
   );
-};
+}

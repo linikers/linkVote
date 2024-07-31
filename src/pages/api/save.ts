@@ -1,13 +1,12 @@
-import { Pool } from "@vercel/postgres";
-import { NextApiRequest, NextApiResponse } from "next";
+import { createPool } from "@vercel/postgres";
+import { NextApiRequest, NextApiResponse } from "next/types";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE
+const client = createPool({
+  connectionString: process.env.POSTGRES_URL,
 });
-
 const createTableIfNotExists = async () => {
   try {
-    await pool.query(`
+    await client.query(`
       CREATE TABLE IF NOT EXISTS competidores (
         id SERIAL PRIMARY KEY,
         name VARCHAR(255) NOT NULL,
@@ -23,27 +22,39 @@ const createTableIfNotExists = async () => {
         totalScore INTEGER DEFAULT 0
       );
     `);
+    console.log("Tabela competidores verificada/criada.");
   } catch (error) {
     console.error('Erro ao criar a tabela competidores:', error);
   }
 };
 
-export default async (request: NextApiRequest, response: NextApiResponse) => {
-  await createTableIfNotExists(); 
-  if (request.method === 'POST') {
-    const { name, work, votes } = request.body;
-    
-    try {
-      const result = await pool.query(
-        'INSERT INTO competidores(name, work, votes) VALUES($1, $2, $3) RETURNING *',
-        [name, work, votes]
-      );
-      response.status(201).json(result.rows[0]);
-    } catch (error) {
-      response.status(500).json({ error: 'Erro ao cadastrar competidor' });
+export default async function handler(request: NextApiRequest, response: NextApiResponse) {
+  try {
+    await createTableIfNotExists();
+
+    if (request.method === 'POST') {
+      const { name, work, votes } = request.body;
+
+      if (!name || !work || votes === undefined) {
+        return response.status(400).json({ error: 'Dados incompletos: name, work e votes são obrigatórios.' });
+      }
+
+      try {
+        const result = await client.query(
+          'INSERT INTO competidores (name, work, votes) VALUES($1, $2, $3) RETURNING *',
+          [name, work, votes]
+        );
+        return response.status(201).json(result.rows[0]);
+      } catch (error) {
+        console.error('Erro ao inserir competidor:', error);
+        return response.status(500).json({ error: 'Erro ao cadastrar competidor.' });
+      }
+    } else {
+      response.setHeader("Allow", ['POST']);
+      return response.status(405).end(`Method ${request.method} Not Allowed`);
     }
-  } else {
-    response.setHeader("allow", ['POST']);
-    response.status(405).end(`Method ${request.method} Not Allowed`);
+  } catch (error) {
+    console.error('Erro na API handler:', error);
+    return response.status(500).json({ error: 'Erro interno do servidor.' });
   }
-};
+}

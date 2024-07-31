@@ -1,10 +1,9 @@
-import { FC } from "react"
 import { Box, Grid, Paper, Typography } from "@mui/material"
-import { IUser} from "../Register/register"
+import { IUser } from "../Register/register"
 interface Top10Props {
     users: IUser[]
 }
-export const Top10:FC<Top10Props> = ({ users }) => {
+export default function Top10 ({ users }:Top10Props) {
 
     const sortedUsers = [...users].sort((a,b) => b.totalScore - a.totalScore).slice(0, 100)
 

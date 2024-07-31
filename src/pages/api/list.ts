@@ -1,6 +1,5 @@
 import { Pool } from "@vercel/postgres";
 import { NextApiRequest, NextApiResponse } from "next";
-// import { response } from "express";
 
 const pool = new Pool({
   connectionString: process.env.DATABASE_URL

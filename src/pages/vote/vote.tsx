@@ -1,10 +1,9 @@
-import { FC, useEffect, useState } from "react";
-import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
-import { IUser } from "../Register/register";
+import { useEffect, useState } from "react";
+import { IUser } from "../Register/register.tsx";
+import axios from "axios";
 import { useFormik } from "formik";
-import * as yup from "yup";
-// import { ListBlobResultBlob } from "@vercel/blob";
-import axios from 'axios';
+import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
+import * as yup from 'yup';
 
 const schema = yup.object({
     name: yup.string().required("Campo obrigatório"),
@@ -46,7 +45,7 @@ interface VoteProps {
     setUsers?: (users: IUser[]) => void;
 }
 
-export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
+export function Vote ({ onOpenSnackBar }:VoteProps) {
     // const [, setTotalVotes] = useState(0);
 
     // const [, setUsersWithPercent] = useState<IUser[]>([]);
@@ -289,4 +288,4 @@ export const Vote: FC<VoteProps> = ({ onOpenSnackBar }) => {
             </form>
         </Grid>
     );
-};
+}
