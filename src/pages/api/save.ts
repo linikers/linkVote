@@ -50,8 +50,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
         return response.status(500).json({ error: 'Erro ao cadastrar competidor.' });
       }
     } else {
-      response.setHeader("Allow", ['POST']);
-      return response.status(405).end(`Method ${request.method} Not Allowed`);
+      response.setHeader("Permitido", ['POST']);
+      return response.status(405).end(`Method ${request.method} Sem permissão`);
     }
   } catch (error) {
     console.error('Erro na API handler:', error);

@@ -1,8 +1,8 @@
-import { Pool } from "@vercel/postgres";
+import { createPool } from "@vercel/postgres";
 import { NextApiRequest, NextApiResponse } from "next";
 
-const pool = new Pool({
-  connectionString: process.env.DATABASE_URL
+const pool = createPool({
+  connectionString: process.env.POSTGRES_URL,
 })
 export default async (request: NextApiRequest, response: NextApiResponse) => {
   if(request.method === ' GET') {
@@ -13,7 +13,7 @@ export default async (request: NextApiRequest, response: NextApiResponse) => {
       response.status(500).json({ error: 'Erro ao listar competidores'})
     }
   } else {
-    response.setHeader("allow", ['GET']);
-    response.status(405).end(`Method ${request.method} not allowed`)
+    response.setHeader("Permitido", ['GET']);
+    response.status(405).end(`Method ${request.method} não permitido`)
   }
 };
