@@ -1,12 +1,1 @@
-{
-  "/_app": "pages/_app.js",
-  "/_error": "pages/_error.js",
-  "/Register/Register": "pages/Register/Register.js",
-  "/Top10/Top10": "pages/Top10/Top10.js",
-  "/api/list": "pages/api/list.js",
-  "/api/save": "pages/api/save.js",
-  "/api/vote": "pages/api/vote.js",
-  "/": "pages/index.js",
-  "/vote/Vote": "pages/vote/Vote.js",
-  "/_document": "pages/_document.js"
-}
+{"/_app":"pages/_app.js","/_error":"pages/_error.js","/Register/Register":"pages/Register/Register.html","/api/list":"pages/api/list.js","/Top10/Top10":"pages/Top10/Top10.html","/api/save":"pages/api/save.js","/api/vote":"pages/api/vote.js","/":"pages/index.html","/vote/Vote":"pages/vote/Vote.html","/_document":"pages/_document.js","/404":"pages/404.html"}

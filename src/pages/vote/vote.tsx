@@ -8,7 +8,7 @@ interface VoteProps {
     setUsers?: (users: IUser[]) => void;
 }
 
-export function Vote({ onOpenSnackBar }: VoteProps) {
+export default function Vote ({ onOpenSnackBar }: VoteProps) {
     const [totalVotes, setTotalVotes] = useState(0);
     const [loading, setLoading] = useState<boolean>(false);
     const [users, setUsers] = useState<IUser[]>([]);
