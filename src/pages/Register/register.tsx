@@ -76,7 +76,6 @@ export default function Register ({ onRegister }: IRegisterProps) {
       setSnackbarOpen(true);
       onRegister();
 
-      // Limpa o formulário após o registro
       setFormData({
         id: "",
         name: "",
@@ -116,7 +115,7 @@ export default function Register ({ onRegister }: IRegisterProps) {
           </Grid>
         </FormControl>
       </Grid>
-      {/* Snackbar component would go here */}
+      {/* Snackbar */}
     </form>
   );
 }

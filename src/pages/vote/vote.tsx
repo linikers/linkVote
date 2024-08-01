@@ -1,140 +1,108 @@
 import { useEffect, useState } from "react";
-import { IUser } from "../Register/register.tsx";
-import { useFormik } from "formik";
+import { IUser } from "../Register/register";
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
-import * as yup from 'yup';
-
-const schema = yup.object({
-    name: yup.string().required("Campo obrigatório"),
-    anatomy: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-    creativity: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-    pigmentation: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-    traces: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-    readability: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-    visualImpact: yup
-        .number()
-        .min(0, "Nota mínima é 0")
-        .max(10, "Nota máxima é 10")
-        .required("Campo obrigatório"),
-});
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
-    users?: IUser[];
-    setUsers?: (users: IUser[]) => void;
 }
 
-export function Vote ({ onOpenSnackBar }:VoteProps) {
-    // const [, setTotalVotes] = useState(0);
-    const [snackbarOpen, setSnackbarOpen] = useState(false);
-    const [loading, setLoading] = useState();
+export function Vote({ onOpenSnackBar }: VoteProps) {
+    const [totalVotes, setTotalVotes] = useState(0);
+    const [loading, setLoading] = useState<boolean>(false);
     const [users, setUsers] = useState<IUser[] | []>([]);
-    const [data, setData] = useState([]);
+    const [voteValues, setVoteValues] = useState({
+        anatomy: 0,
+        creativity: 0,
+        pigmentation: 0,
+        traces: 0,
+        readability: 0,
+        visualImpact: 0,
+    });
+    const [votingUserId, setVotingUserId] = useState<string | null>(null);
 
-        useEffect(() => {
-            const fetchUsers = async () => {
-              try {
-                const response = await fetch('/api/list'); 
-                if(!response.ok) {
-                    // const error = await response.json();
-                    // setSnackbarMessage(`Erro ao listar: ${error.error}`);
-                    // setSnackbarSeverity("error");
-                    setSnackbarOpen(true);
-                    // return;
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/list');
+                if (!response.ok) {
+                    throw new Error('Erro ao listar competidores');
                 }
                 const data = await response.json();
                 setUsers(data);
-                // setData(filteredData);
-              } catch (error) {
-                console.error('Erro fetching data:', error);
-              }
-              finally {
-                // setLoading(false)
-              }
-            };
+                const total = data.reduce((acc: number, user: { votes: number }) => acc + user.votes, 0);
+                setTotalVotes(total);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+                onOpenSnackBar("Erro ao listar competidores");
+            } finally {
+                setLoading(false);
+            }
+        };
 
-            fetchUsers();
-          }, []);
+        fetchUsers();
+    }, [onOpenSnackBar]);
 
-    const formik = useFormik({
-        initialValues: {
-            name: '',
-            anatomy: 0,
-            creativity: 0,
-            pigmentation: 0,
-            traces: 0,
-            readability: 0,
-            visualImpact: 0,
-        },
-        validationSchema: schema,
-        onSubmit: async (values, { resetForm }) => {
-            const updatedUsers = users.map(user => {
-                if (user.name === values.name) {
-                    return { ...user, ...values };
-                }
-                return user;
-            });
-            setUsers(updatedUsers);
+    const handleVoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setVoteValues({ ...voteValues, [e.target.name]: parseInt(e.target.value) });
+    };
 
-            await fetch('/api/save', {
+    const handleVote = async (userId: string) => {
+        setVotingUserId(userId);
+
+        try {
+            setLoading(true);
+            const response = await fetch('/api/vote', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ ...voteValues, userId })
             });
-
-            onOpenSnackBar(`Você votou em ${values.name}`);
-            resetForm();
-        },
-    });
-
-    // useEffect(() => {
-    //     const total = users.reduce((total, user) => total + user.votes, 0);
-    //     setTotalVotes(total);
-
-    //     const updatedUsersWithPercent = users.map(user => ({
-    //         ...user,
-    //         percent: total > 0 ? ((user.votes / total) * 100) : 0,
-    //     }));
-    //     setUsersWithPercent(updatedUsersWithPercent);
-    // }, [users]);
+            if (!response.ok) {
+                throw new Error('Erro ao registrar voto');
+            }
+            const updatedUser = await response.json();
+            const updatedUsers = users.map(
+                (user) => user.id === updatedUser.id ? updatedUser : user
+            );
+            setUsers(updatedUsers);
+            const newTotalVotes = updatedUsers.reduce((acc, user) => acc + user.votes, 0);
+            setTotalVotes(newTotalVotes);
+            setVoteValues({
+                anatomy: 0,
+                creativity: 0,
+                pigmentation: 0,
+                traces: 0,
+                readability: 0,
+                visualImpact: 0,
+            });
+            onOpenSnackBar("Voto registrado com sucesso");
+        } catch (error) {
+            console.error('Erro ao votar:', error);
+            onOpenSnackBar("Erro ao registrar voto");
+        } finally {
+            setLoading(false);
+            setVotingUserId(null);
+        }
+    };
 
     return (
-        <Grid container 
-            sx={{ 
-                margin: "2rem", 
-                display: "flex", 
-                flexDirection: "column", 
-                alignItems: "center", 
+        <Grid container
+            sx={{
+                margin: "2rem",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
                 minWidth: "320px",
             }}
         >
             <Grid item>
                 <Typography variant="h4" gutterBottom style={{ marginBottom: "6rem" }}>Vote Agora</Typography>
             </Grid>
-        
-            <form style={{ width: "100%" }} onSubmit={formik.handleSubmit}>
-                <Grid container spacing={3} sx={{ width:"100%" }}>
+
+            <form style={{ width: "100%" }} onSubmit={(e) => { e.preventDefault(); }}>
+                <Grid container spacing={3} sx={{ width: "100%" }}>
                     {users.length > 0 ? (
-                        users.map((user, index) => (
+                        users.map((user) => (
                             <Grid
                                 key={user.id}
                                 xs={12} item
@@ -155,109 +123,105 @@ export function Vote ({ onOpenSnackBar }:VoteProps) {
                                     }
                                 }}
                             >
-                                <Typography 
+                                <Typography
                                     style={{ fontWeight: "bold" }}
                                 >
                                     {user.name}
                                 </Typography>
-                                <Typography style={{ color: "#757575" }}>{user.work}</Typography>
-                                
-                                <TextField 
+                                <Typography
+                                    style={{ color: "#757575" }}
+                                >
+                                    {user.work}
+                                </Typography>
+
+                                <TextField
                                     label="Anatomia"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.anatomy}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.anatomy && Boolean(formik.errors.anatomy)}
-                                    helperText={formik.touched.anatomy && formik.errors.anatomy}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.anatomy}
+                                    onChange={handleVoteChange}
                                     name="anatomy"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <TextField 
+                                <TextField
                                     label="Criatividade"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.creativity}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.creativity && Boolean(formik.errors.creativity)}
-                                    helperText={formik.touched.creativity && formik.errors.creativity}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.creativity}
+                                    onChange={handleVoteChange}
                                     name="creativity"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <TextField 
+                                <TextField
                                     label="Pigmentação"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.pigmentation}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.pigmentation && Boolean(formik.errors.pigmentation)}
-                                    helperText={formik.touched.pigmentation && formik.errors.pigmentation}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.pigmentation}
+                                    onChange={handleVoteChange}
                                     name="pigmentation"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <TextField 
+                                <TextField
                                     label="Traços"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.traces}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.traces && Boolean(formik.errors.traces)}
-                                    helperText={formik.touched.traces && formik.errors.traces}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.traces}
+                                    onChange={handleVoteChange}
                                     name="traces"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <TextField 
+                                <TextField
                                     label="Legibilidade"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.readability}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.readability && Boolean(formik.errors.readability)}
-                                    helperText={formik.touched.readability && formik.errors.readability}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.readability}
+                                    onChange={handleVoteChange}
                                     name="readability"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <TextField 
+                                <TextField
                                     label="Impacto Visual"
                                     type="number"
-                                    inputProps={{ min: 0, max: 10 }}
-                                    value={formik.values.visualImpact}
-                                    onChange={formik.handleChange}
-                                    error={formik.touched.visualImpact && Boolean(formik.errors.visualImpact)}
-                                    helperText={formik.touched.visualImpact && formik.errors.visualImpact}
+                                    inputProps={{ min: 1, max: 10 }}
+                                    value={voteValues.visualImpact}
+                                    onChange={handleVoteChange}
                                     name="visualImpact"
                                     style={{ marginBottom: "0.5rem" }}
                                     fullWidth
                                 />
-                                <Button
-                                    variant="contained"
-                                    color="primary"
-                                    // onClick={() => handleVote(user.url)}
-                                    style={{ marginTop: "0.5rem", backgroundColor: "#adb5bd", width: "6rem" }}
-                                >
-                                    Votar
-                                </Button>
                                 <LinearProgress
                                     variant="determinate"
-                                    // value={user.}
-                                    sx={{ 
+                                    value={totalVotes > 0
+                                        ? (user.votes / totalVotes) * 100
+                                        : 0
+                                    }
+                                    sx={{
                                         backgroundColor: "#414141",
-                                        marginTop: "0.5rem", 
-                                        height: "10px", 
-                                        borderRadius: "8px", 
+                                        marginTop: "0.5rem",
+                                        height: "10px",
+                                        borderRadius: "8px",
                                         "& .MuiLinearProgress-bar": {
                                             backgroundColor: "#3f51b5",
                                         },
                                     }}
                                 />
                                 <Typography variant="caption" style={{ display: "block", marginTop: "0.5rem" }}>
-                                    {/* {user} votos ({user?.toFixed()} %) */}
+                                    {user.votes} votos ({totalVotes > 0 ? ((user.votes / totalVotes) * 100).toFixed(2) : 0} %)
                                 </Typography>
+                                <Button
+                                    variant="contained"
+                                    color="primary"
+                                    onClick={() => handleVote(user.id)}
+                                    style={{ marginTop: "1rem" }}
+                                    disabled={votingUserId === user.id}
+                                >
+                                    Votar
+                                </Button>
                             </Grid>
                         ))
                     ) : (

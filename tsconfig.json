@@ -10,7 +10,7 @@
     "module": "ESNext",
     "skipLibCheck": true,
     /* Bundler mode */
-    "moduleResolution": "bundler",
+    "moduleResolution": "Node",
     "allowImportingTsExtensions": true,
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -28,11 +28,7 @@
   "include": [
     "src"
   ],
-  "references": [
-    {
-      "path": ""
-    }
-  ],
+  "references": [],
   "exclude": [
     "node_modules"
   ]

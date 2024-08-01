@@ -1,0 +1,33 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("POSTGRES_URL") 
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+// Defina seus modelos aqui
+model User {
+  id               String   @id @default(uuid())
+  name             String
+  anatomy          Int
+  creativity       Int
+  pigmentation     Int
+  traces           Int
+  readability      Int
+  visualImpact     Int
+  votes            Vote[]   @relation("UserVotes")
+}
+
+model Vote {
+  id               String   @id @default(uuid())
+  anatomy          Int
+  creativity       Int
+  pigmentation     Int
+  traces           Int
+  readability      Int
+  visualImpact     Int
+  userId           String
+  user             User     @relation("UserVotes", fields: [userId], references: [id])
+}

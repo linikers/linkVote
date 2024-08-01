@@ -1,4 +1,5 @@
 // src/pages/api/list.ts
+
 import { createPool } from "@vercel/postgres";
 import { NextApiRequest, NextApiResponse } from "next/types";
 
@@ -17,8 +18,8 @@ export default async function handler(request: NextApiRequest, response: NextApi
         return response.status(500).json({ error: 'Erro ao listar competidores.' });
       }
     } else {
-      response.setHeader("Allow", ['GET']);
-      return response.status(405).end(`Method ${request.method} Not Allowed`);
+      response.setHeader("Permitido", ['GET']);
+      return response.status(405).end(`Method ${request.method} Sem permissão`);
     }
   } catch (error) {
     console.error('Erro na API handler:', error);
