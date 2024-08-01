@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Button, Grid } from "@mui/material";
 import { Header } from "../components/header";
 import { SnackBarCustom } from "../components/Snackbar";
 import Top10 from "./Top10/Top10.tsx";
 import Register, { IUser } from "./Register/Register.tsx";
 import Vote from "./vote/Vote.tsx";
+import { Button, Grid } from "@mui/material";
 
 function App() {
     const [users, setUsers] = useState<IUser[]>([]);

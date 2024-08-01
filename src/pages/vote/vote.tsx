@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
-import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
 import { IUser } from "../Register/Register.tsx";
+import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;

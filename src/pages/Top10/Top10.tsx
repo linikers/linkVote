@@ -1,6 +1,6 @@
-import { Box, Grid, Paper, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { IUser } from "../Register/Register.tsx";
+import { Box, Grid, Paper, Typography } from "@mui/material";
 
 
 export default function Top10 () {
