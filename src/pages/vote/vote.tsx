@@ -1,15 +1,17 @@
 import { useEffect, useState } from "react";
-import { IUser } from "../Register/register";
 import { Button, Grid, LinearProgress, TextField, Typography } from "@mui/material";
+import { IUser } from "../Register/Register.tsx";
 
 interface VoteProps {
     onOpenSnackBar: (message: string) => void;
+    users?: IUser[] | []; 
+    setUsers?: (users: IUser[]) => void;
 }
 
 export function Vote({ onOpenSnackBar }: VoteProps) {
     const [totalVotes, setTotalVotes] = useState(0);
     const [loading, setLoading] = useState<boolean>(false);
-    const [users, setUsers] = useState<IUser[] | []>([]);
+    const [users, setUsers] = useState<IUser[]>([]);
     const [voteValues, setVoteValues] = useState({
         anatomy: 0,
         creativity: 0,
@@ -44,7 +46,7 @@ export function Vote({ onOpenSnackBar }: VoteProps) {
     }, [onOpenSnackBar]);
 
     const handleVoteChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setVoteValues({ ...voteValues, [e.target.name]: parseInt(e.target.value) });
+        setVoteValues({ ...voteValues, [e.target.name]: parseInt(e.target.value, 10) });
     };
 
     const handleVote = async (userId: string) => {
@@ -84,7 +86,7 @@ export function Vote({ onOpenSnackBar }: VoteProps) {
             setVotingUserId(null);
         }
     };
-
+    if(loading) return <Typography>Carregando...</Typography>
     return (
         <Grid container
             sx={{

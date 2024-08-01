@@ -1,8 +1,12 @@
 {
   "/_app": "pages/_app.js",
   "/_error": "pages/_error.js",
-  "/_document": "pages/_document.js",
-  "/": "pages/index.js",
+  "/Register/Register": "pages/Register/Register.js",
+  "/Top10/Top10": "pages/Top10/Top10.js",
+  "/api/list": "pages/api/list.js",
+  "/api/save": "pages/api/save.js",
   "/api/vote": "pages/api/vote.js",
-  "/api/list": "pages/api/list.js"
+  "/": "pages/index.js",
+  "/vote/Vote": "pages/vote/Vote.js",
+  "/_document": "pages/_document.js"
 }

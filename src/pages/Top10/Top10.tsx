@@ -1,9 +1,35 @@
 import { Box, Grid, Paper, Typography } from "@mui/material"
-import { IUser } from "../Register/register"
-interface Top10Props {
-    users: IUser[]
-}
-export default function Top10 ({ users }:Top10Props) {
+import { useEffect, useState } from "react";
+import { IUser } from "../Register/Register.tsx";
+
+
+export default function Top10 () {
+    const [loading, setLoading] = useState<boolean>(false);
+    const [users, setUsers]= useState<IUser[]>([]);
+    
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                setLoading(true);
+                const response = await fetch('/api/list');
+                if (!response.ok) {
+                    throw new Error('Erro ao listar competidores');
+                }
+                const data = await response.json();
+                setUsers(data);
+                // const total = data.reduce((acc: number, user: { votes: number }) => acc + user.votes, 0);
+                // setTotalVotes(total);
+            } catch (error) {
+                console.error('Erro ao buscar dados:', error);
+                // onOpenSnackBar("Erro ao listar competidores");
+            } finally {
+                setLoading(false);
+            }
+        };
+    
+        fetchUsers();
+    }, []);
+    if(loading) return <Typography>Carregando...</Typography>
 
     const sortedUsers = [...users].sort((a,b) => b.totalScore - a.totalScore).slice(0, 100)
 

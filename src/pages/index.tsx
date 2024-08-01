@@ -1,10 +1,10 @@
 import { useState } from "react";
-import Register, { IUser } from "./Register/register.tsx";
 import { Button, Grid } from "@mui/material";
 import { Header } from "../components/header";
 import { SnackBarCustom } from "../components/Snackbar";
-import Top10 from "./Top10/Top10";
-import { Vote } from "./vote/vote";
+import Top10 from "./Top10/Top10.tsx";
+import Register, { IUser } from "./Register/Register.tsx";
+import { Vote } from "./vote/Vote.tsx";
 
 function App() {
     const [users, setUsers] = useState<IUser[]>([]);
@@ -59,7 +59,7 @@ function App() {
             {currentPage === 'vote' && 
               <Vote onOpenSnackBar={handleOpenSnackBar} users={users} setUsers={setUsers} />}
             {currentPage === 'register' && <Register onRegister={handleNavigateVote} />}
-            {currentPage === 'top10' && <Top10  users={users}/>}
+            {currentPage === 'top10' && <Top10 />}
           </Grid>
       </Grid>
       <SnackBarCustom 
