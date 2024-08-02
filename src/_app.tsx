@@ -1,10 +1,10 @@
 import { CssBaseline, ThemeProvider } from "@mui/material";
-import { useGlobalStyles } from "./assets/themes/globalStyles";
+// import useGlobalStyles from "./assets/themes/globalStyles.ts";
 import { AppProps } from "next/app";
 import { theme } from "./assets/themes/theme";
 
 function _app({ Component, pageProps}: AppProps) {
-    useGlobalStyles();
+    // useGlobalStyles();
     return(
         <ThemeProvider theme={theme}>
             <CssBaseline />
